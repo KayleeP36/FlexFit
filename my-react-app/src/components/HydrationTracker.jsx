@@ -27,6 +27,119 @@ export default function HydrationTracker() {
   const [confetti, setConfetti] = useState([])
   const prevPercent = useRef(0)
 
+  // Shared challenge state (serverless via encoded link)
+  const [challenge, setChallenge] = useState(null)
+  const [challengeLink, setChallengeLink] = useState('')
+  const [passwordInput, setPasswordInput] = useState('')
+  const [userRole, setUserRole] = useState(null) // 'A' or 'B'
+
+  const genId = (len = 6) => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    let out = ''
+    const arr = new Uint32Array(len)
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) crypto.getRandomValues(arr)
+    for (let i = 0; i < len; i++) {
+      out += chars[arr[i] % chars.length]
+    }
+    return out
+  }
+
+  const encodeChallenge = (obj) => {
+    try {
+      return btoa(unescape(encodeURIComponent(JSON.stringify(obj))))
+    } catch (e) { return '' }
+  }
+
+  const decodeChallenge = (s) => {
+    try {
+      // s might arrive percent-encoded or already decoded. Try a few fallbacks.
+      let candidate = s
+      try { candidate = decodeURIComponent(s) } catch (e) {}
+      try {
+        const json = decodeURIComponent(escape(atob(candidate)))
+        return JSON.parse(json)
+      } catch (e) {
+        // fallback: candidate might already be raw base64 without UTF-8 wrapping
+        try { return JSON.parse(atob(candidate)) } catch (e2) { return null }
+      }
+    } catch (e) { return null }
+  }
+
+  // create a new challenge: two passwords (one per participant) and initial placeholders
+  const createChallenge = () => {
+    const id = genId(8)
+    const passA = genId(6)
+    const passB = genId(6)
+    const obj = {
+      id,
+      playerA: { name: '', consumedMl: 0 },
+      playerB: { name: '', consumedMl: 0 },
+      passA,
+      passB,
+      updatedAt: Date.now()
+    }
+    const token = encodeChallenge(obj)
+    const url = `${window.location.origin}${window.location.pathname}?challenge=${encodeURIComponent(token)}`
+    setChallenge(obj)
+    setChallengeLink(url)
+    // show creator as playerA by default
+    setUserRole('A')
+    setPasswordInput(passA)
+    // update browser URL without reloading (use encoded token)
+    try { history.replaceState(null, '', `?challenge=${encodeURIComponent(token)}`) } catch (e) {}
+  }
+
+  // apply challenge updates and refresh encoded link
+  const updateChallenge = (role, name, consumedMl) => {
+    if (!challenge) return
+    const next = { ...challenge }
+    if (role === 'A') next.playerA = { name, consumedMl }
+    if (role === 'B') next.playerB = { name, consumedMl }
+    next.updatedAt = Date.now()
+    const token = encodeChallenge(next)
+    const url = `${window.location.origin}${window.location.pathname}?challenge=${encodeURIComponent(token)}`
+    setChallenge(next)
+    setChallengeLink(url)
+    try { history.replaceState(null, '', `?challenge=${encodeURIComponent(token)}`) } catch (e) {}
+  }
+
+  // on mount: parse challenge from URL if present
+  useEffect(() => {
+    try {
+      // extract raw challenge param from location.search to preserve +/=
+      const rawMatch = (window.location.search || '').match(/[?&]challenge=([^&]+)/)
+      const rawT = rawMatch ? rawMatch[1] : null
+      // join may be simple, URLSearchParams is fine for it
+      const params = new URLSearchParams(window.location.search)
+      const join = params.get('join')
+      if (rawT) {
+        // decode percent-encoding but don't let URLSearchParams convert + to space
+        const t = decodeURIComponent(rawT)
+        const obj = decodeChallenge(t)
+        if (obj) {
+          setChallenge(obj)
+          const base = `${window.location.origin}${window.location.pathname}?challenge=${encodeURIComponent(t)}`
+          setChallengeLink(base)
+          // if URL includes join role, auto-assign and pre-fill password
+          if (join === 'B') {
+            setUserRole('B')
+            setPasswordInput(obj.passB)
+          } else if (join === 'A') {
+            setUserRole('A')
+            setPasswordInput(obj.passA)
+          }
+        }
+      }
+    } catch (e) {}
+  }, [])
+
+  const verifyPassword = (pw) => {
+    if (!challenge) return false
+    if (pw === challenge.passA) { setUserRole('A'); setPasswordInput(''); return true }
+    if (pw === challenge.passB) { setUserRole('B'); setPasswordInput(''); return true }
+    return false
+  }
+
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
@@ -223,6 +336,15 @@ export default function HydrationTracker() {
                       setFriendInput={setFriendInput}
                       friendConsumedMl={friendConsumedMl}
                       updateFriend={updateFriend}
+                      // challenge props
+                      challenge={challenge}
+                      challengeLink={challengeLink}
+                      createChallenge={createChallenge}
+                      verifyPassword={verifyPassword}
+                      passwordInput={passwordInput}
+                      setPasswordInput={setPasswordInput}
+                      userRole={userRole}
+                      updateChallenge={updateChallenge}
                     />
                   </div>
                 </div>
