@@ -182,3 +182,328 @@
     border-right-color: var(--border);
   }
 }
+
+/* Hydration Tracker styles */
+.tracker-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+.tracker-controls {
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 32px;
+  align-items: center;
+  background: transparent;
+}
+
+.tracker-controls .info h1 {
+  margin: 0 0 8px 0;
+}
+
+.stats {
+  display: flex;
+  gap: 18px;
+  align-items: baseline;
+}
+
+.stats strong {
+  display: block;
+  font-size: 18px;
+}
+
+.muted {
+  color: var(--text);
+  opacity: 0.75;
+  font-size: 12px;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.controls input[type="number"] {
+  width: 100px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+  color: var(--text);
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.buttons button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(180deg, var(--accent), #0b8fe6);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(14,165,255,0.12);
+  cursor: pointer;
+}
+.buttons .ghost {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text);
+}
+
+.pool-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+}
+
+.pool {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: calc(100svh - 140px);
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(14,165,255,0.06), transparent 10%), linear-gradient(180deg,#071326 0%, #05131b 60%, #031019 100%);
+  overflow: hidden;
+}
+
+.water {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(14,165,255,0.9), rgba(3,105,161,0.9));
+  transition: height 800ms cubic-bezier(.2,.8,.2,1);
+}
+
+.duck {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: bottom 800ms cubic-bezier(.2,.8,.2,1), transform 400ms ease;
+  width: 72px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.duck-body {
+  width: 48px;
+  height: 36px;
+  background: #ffd54a;
+  border-radius: 999px 999px 80px 80px;
+  box-shadow: inset 0 -6px 0 rgba(0,0,0,0.06);
+}
+.duck-beak {
+  position: absolute;
+  right: 22%;
+  top: 42%;
+  width: 18px;
+  height: 10px;
+  background: #ffb74d;
+  transform: rotate(20deg);
+  border-radius: 2px;
+}
+.duck-eye {
+  position: absolute;
+  left: 36%;
+  top: 26%;
+  width: 6px;
+  height: 6px;
+  background: #222;
+  border-radius: 50%;
+}
+
+.duck.celebrate {
+  animation: duck-bounce 1.2s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes duck-bounce {
+  0% { transform: translateX(-50%) translateY(0) rotate(0); }
+  30% { transform: translateX(-50%) translateY(-10px) rotate(-4deg); }
+  60% { transform: translateX(-50%) translateY(0) rotate(4deg); }
+  100% { transform: translateX(-50%) translateY(0) rotate(0); }
+}
+
+@media (max-width: 800px) {
+  .tracker-controls { flex-direction: column; align-items: stretch; gap: 12px; }
+  .controls { align-items: stretch }
+  .pool { min-height: calc(100svh - 260px) }
+}
+
+/* Confetti */
+.confetti-root {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+.confetti {
+  position: absolute;
+  top: 8%;
+  width: 10px;
+  height: 18px;
+  opacity: 0.95;
+  border-radius: 2px;
+  transform-origin: center;
+  animation: confetti-fall 2.6s linear forwards, confetti-rotate 1.2s ease-in-out infinite;
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(0) rotate(0); opacity: 1 }
+  100% { transform: translateY(700px) rotate(720deg); opacity: 0 }
+}
+@keyframes confetti-rotate {
+  0% { transform: rotate(0) }
+  50% { transform: rotate(180deg) }
+  100% { transform: rotate(360deg) }
+}
+
+/* Athlete compare panel */
+.compare-panel {
+  padding: 18px 24px;
+  background: linear-gradient(180deg, rgba(10,14,20,0.45), rgba(6,10,14,0.35));
+  border-top: 1px solid rgba(255,255,255,0.03);
+  z-index: 11;
+}
+.compare-panel h2 { margin: 0 0 6px 0 }
+.compare-sub { margin: 0 0 12px 0; font-size: 13px; color: var(--text); opacity: 0.75 }
+.athlete-list { display: flex; flex-direction: column; gap: 12px }
+.athlete-row { display: flex; gap: 12px; align-items: center; justify-content: space-between }
+.athlete-meta { min-width: 200px }
+.athlete-name { font-weight: 600 }
+.athlete-intake { font-size: 13px; color: var(--text); opacity: 0.85 }
+.athlete-progress { flex: 1 }
+.bar { height: 10px; background: rgba(255,255,255,0.06); border-radius: 6px; overflow: hidden; margin-bottom: 6px }
+.fill { height: 100%; background: linear-gradient(90deg,#22c1ff,#0ea5ff); transition: width 600ms ease }
+.labels { display:flex; justify-content:space-between; font-size:12px; color:var(--text); opacity:0.8 }
+.motivation { margin-top:8px; font-size:13px }
+.motivation.done { color: #1982c4; font-weight:600 }
+
+.compare-toggle { padding:8px 12px; border-radius:8px; border:none; background:var(--accent-bg); cursor:pointer }
+
+@media (max-width:800px) {
+  .athlete-meta { min-width: 120px }
+}
+
+/* Overlay styles */
+.compare-overlay {
+  position: absolute;
+  inset: 8% 6% auto 6%;
+  z-index: 30;
+  display: flex;
+  justify-content: center;
+  pointer-events: auto;
+}
+.compare-inner {
+  width: min(720px, 92%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.92));
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: var(--shadow);
+  color: var(--text-h);
+}
+.friend-form { display:flex; gap:8px; align-items:center; margin-bottom:8px }
+.friend-form label { display:flex; flex-direction:column; font-size:13px }
+.friend-form input { padding:6px; border-radius:6px; border:1px solid var(--border); width:140px }
+.friend-actions { display:flex; gap:8px; align-items:center }
+.friend-actions input { border:1px solid var(--border); padding:6px; border-radius:6px }
+
+/* Right stacked panels for athlete compare and friend challenge */
+.right-panels {
+  position: absolute;
+  right: 5%;
+  top: 10%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 40;
+}
+.panel {
+  width: 300px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: var(--shadow);
+  color: var(--text-h);
+}
+.panel h3 { margin: 0 0 8px 0 }
+.friend-panel .friend-form-col { display:flex; flex-direction:column; gap:8px }
+.friend-panel .friend-form-col input { padding:6px; border:1px solid var(--border); border-radius:6px }
+.friend-panel .friend-actions-col { display:flex; gap:8px }
+.friend-panel .live-row { display:flex; gap:8px; align-items:center }
+.friend-panel .room-row { display:flex; gap:8px; align-items:center; margin-top:8px }
+.friend-stats { margin-top:10px; font-size:13px }
+
+.invite-row { display:flex; gap:8px; align-items:center; margin-top:8px }
+.invite-row input { flex:1; padding:6px; border-radius:6px; border:1px solid var(--border) }
+.invite-row button { padding:6px 10px; border-radius:6px }
+
+/* Toast */
+.toast {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background: rgba(18, 18, 18, 0.92);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 180ms ease, opacity 180ms ease;
+  z-index: 120;
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* Fullscreen compare modal */
+.compare-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+}
+.compare-modal-inner {
+  width: min(1100px, 96%);
+  max-height: 92vh;
+  background: var(--bg);
+  border-radius: 12px;
+  overflow: auto;
+  position: relative;
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+.modal-close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 18px;
+}
+.compare-grid-left { min-width: 0 }
+.compare-grid-right { min-width: 0 }
+
+@media (max-width: 900px) {
+  .compare-grid { grid-template-columns: 1fr; }
+}
