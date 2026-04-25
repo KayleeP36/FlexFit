@@ -4,298 +4,672 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FlexFit Workout Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --bg-0: #070707;
-        --bg-1: #18110d;
-        --card: rgba(255, 255, 255, 0.06);
-        --line: rgba(255, 127, 58, 0.35);
-        --text: #f4e8e0;
-        --muted: #c9b6ab;
-        --hot-1: #ff5722;
-        --hot-2: #ff9447;
+        --bg-0: #030303;
+        --bg-1: #080b12;
+        --card: rgba(255, 255, 255, 0.04);
+        --line: rgba(31, 80, 200, 0.4);
+        --text: #e0eaf4;
+        --muted: #abb8c9;
+        --hot-1: #0f2d6b;
+        --hot-2: #2563b6;
       }
 
-      * {
-        box-sizing: border-box;
-      }
+      * { box-sizing: border-box; }
 
       body {
         margin: 0;
         min-height: 100vh;
-        display: grid;
-        place-items: center;
-        padding: 14px;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 20px 16px 40px;
+        font-family: 'Barlow', 'Segoe UI', sans-serif;
         color: var(--text);
         background:
-          radial-gradient(circle at 14% 4%, rgba(255, 92, 31, 0.22), transparent 40%),
-          radial-gradient(circle at 95% 2%, rgba(255, 141, 71, 0.18), transparent 35%),
-          linear-gradient(130deg, var(--bg-0), var(--bg-1));
+          radial-gradient(circle at 14% 4%, rgba(26, 90, 210, 0.14), transparent 40%),
+          radial-gradient(circle at 95% 2%, rgba(15, 45, 160, 0.12), transparent 35%),
+          linear-gradient(130deg, #030303, #080808);
       }
 
-      .panel {
-        width: min(520px, 96vw);
-        border-radius: 22px;
-        padding: 22px;
-        border: 1px solid var(--line);
-        background: linear-gradient(160deg, rgba(20, 20, 20, 0.96), rgba(14, 14, 14, 0.92));
-        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
-      }
-
-      h1 {
-        margin: 0;
-        font-size: clamp(1.9rem, 4vw, 2.4rem);
-        text-transform: uppercase;
-        line-height: 1;
-      }
-
-      p {
-        margin: 8px 0 0;
-        color: var(--muted);
-      }
-
-      .block {
-        margin-top: 16px;
-        border: 1px solid rgba(255, 130, 67, 0.26);
-        background: var(--card);
-        border-radius: 14px;
-        padding: 14px;
-      }
-
-      label {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 0.88rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: #f6ded1;
-      }
-
-      select {
-        width: 100%;
-        background: #18100d;
-        color: #ffe6da;
-        border: 1px solid rgba(255, 129, 63, 0.42);
-        border-radius: 10px;
-        padding: 11px;
-        font-size: 1rem;
-      }
-
-      .selected {
-        margin-top: 10px;
-        color: #ffd7c5;
-      }
-
-      .counter-row {
-        margin-top: 10px;
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        gap: 12px;
+      /* ── Top bar ──────────────────────────────────── */
+      .top-bar {
+        max-width: 1100px;
+        margin: 0 auto 24px;
+        display: flex;
+        justify-content: space-between;
         align-items: center;
+        gap: 16px;
       }
 
-      .btn {
-        border: 1px solid rgba(255, 125, 65, 0.45);
-        border-radius: 10px;
-        background: #221610;
-        color: #ffe2d1;
-        font-size: 1rem;
-        font-weight: 700;
-        min-height: 44px;
-        cursor: pointer;
-        transition: transform 140ms ease, filter 140ms ease;
-      }
-
-      .btn:hover {
-        transform: translateY(-1px);
-        filter: brightness(1.08);
-      }
-
-      .btn.plus,
-      .btn.start {
-        background: linear-gradient(120deg, var(--hot-1), var(--hot-2));
-        color: #1a0f09;
-        border: 0;
-      }
-
-      .reps {
-        text-align: center;
-      }
-
-      .reps strong {
-        display: block;
-        font-size: 2rem;
+      .page-title {
+        margin: 0;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: clamp(2.2rem, 5vw, 3.4rem);
+        letter-spacing: 0.04em;
         line-height: 1;
+        color: #fff;
       }
 
-      .reps span {
-        color: var(--muted);
-        font-size: 0.9rem;
-      }
+      .page-title span { color: var(--hot-2); }
 
-      .timer-display {
-        text-align: center;
-        font-size: 2.2rem;
-        font-weight: 800;
-        letter-spacing: 0.06em;
-        margin-top: 4px;
+      .back-btn {
+        border: 1px solid rgba(65, 155, 255, 0.45);
+        border-radius: 10px;
+        background: #101622;
+        color: #d1e2ff;
+        font-family: 'Barlow', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        padding: 10px 18px;
+        cursor: pointer;
+        transition: filter 140ms;
+        white-space: nowrap;
       }
+      .back-btn:hover { filter: brightness(1.12); }
 
-      .timer-controls {
-        margin-top: 12px;
+      /* ── Two-column grid ──────────────────────────── */
+      .workspace {
+        max-width: 1100px;
+        margin: 0 auto;
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+
+      /* ── Shared block ─────────────────────────────── */
+      .block {
+        border: 1px solid rgba(37, 99, 220, 0.35);
+        background: linear-gradient(160deg, rgba(22, 22, 22, 0.96), rgba(14, 14, 14, 0.92));
+        border-radius: 18px;
+        padding: 24px;
+      }
+
+      .block-label {
+        display: block;
+        margin: 0 0 12px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--hot-2);
+      }
+
+      /* ── TIMER COLUMN ─────────────────────────────── */
+      .timer-col {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .timer-hero {
+        text-align: center;
+        padding: 36px 24px 28px;
+      }
+
+      .timer-digits {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: clamp(6rem, 13vw, 9rem);
+        line-height: 1;
+        letter-spacing: 0.04em;
+        color: #fff;
+        text-shadow: 0 0 40px rgba(37, 99, 220, 0.55), 0 0 80px rgba(37, 99, 220, 0.2);
+        transition: color 200ms;
+      }
+
+      .timer-digits.running { color: #7090ff; }
+      .timer-digits.done    { color: #4466ff; }
+
+      .timer-status {
+        margin-top: 10px;
+        font-size: 1rem;
+        color: var(--muted);
+        min-height: 1.4em;
+      }
+
+      .preset-pills {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .preset-pill {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(30, 80, 200, 0.35);
+        border-radius: 8px;
+        color: #f4e8e0;
+        font-family: 'Barlow', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        padding: 8px 4px;
+        cursor: pointer;
+        text-align: center;
+        transition: background 140ms, border-color 140ms;
+      }
+      .preset-pill:hover  { background: rgba(37, 90, 220, 0.2); border-color: var(--hot-2); }
+      .preset-pill.active { background: linear-gradient(120deg, var(--hot-1), var(--hot-2)); border-color: transparent; color: #fff; }
+
+      .adjust-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .control-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
         gap: 10px;
       }
 
-      .status {
-        margin-top: 12px;
-        color: #ffd7c5;
-        font-size: 0.95rem;
+      /* ── REP COUNTER ──────────────────────────────── */
+      .rep-block { text-align: center; padding: 22px 24px; }
+
+      .rep-row {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 14px;
+        align-items: center;
+        margin-top: 6px;
       }
 
-      @media (max-width: 560px) {
-        .panel {
-          padding: 16px;
-        }
+      .rep-number {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 4rem;
+        line-height: 1;
+        color: #fff;
+      }
 
-        .timer-controls {
-          grid-template-columns: 1fr;
-        }
+      .rep-unit {
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      /* ── QUEUE COLUMN ─────────────────────────────── */
+      .queue-col {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .queue-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+
+      .queue-name {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1.6rem;
+        letter-spacing: 0.06em;
+        color: #fff;
+        line-height: 1;
+      }
+
+      .queue-meta {
+        font-size: 0.88rem;
+        color: #ffc8ab;
+        font-weight: 600;
+      }
+
+      .queue-list {
+        list-style: none;
+        margin: 0 0 16px;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 340px;
+        overflow-y: auto;
+      }
+
+      .queue-list::-webkit-scrollbar { width: 4px; }
+      .queue-list::-webkit-scrollbar-track { background: transparent; }
+      .queue-list::-webkit-scrollbar-thumb { background: rgba(182,37,46,0.4); border-radius: 4px; }
+
+      .queue-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid rgba(30, 80, 195, 0.28);
+        border-radius: 10px;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.03);
+        transition: background 120ms;
+      }
+      .queue-item:hover { background: rgba(255,255,255,0.06); }
+      .queue-item input[type="checkbox"] {
+        accent-color: var(--hot-2);
+        flex-shrink: 0;
+        width: 17px; height: 17px;
+        cursor: pointer;
+      }
+      .queue-item.done .item-text { text-decoration: line-through; color: #7a6f6b; }
+
+      .item-text {
+        flex: 1;
+        font-size: 0.95rem;
+        color: #f1e5de;
+        line-height: 1.35;
+      }
+
+      .item-del {
+        flex-shrink: 0;
+        background: none;
+        border: none;
+        color: rgba(255,255,255,0.25);
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 2px 6px;
+        border-radius: 6px;
+        transition: color 120ms, background 120ms;
+        line-height: 1;
+      }
+      .item-del:hover { color: #ff6060; background: rgba(255,80,80,0.12); }
+
+      .add-row {
+        display: flex;
+        gap: 8px;
+      }
+
+      .add-input {
+        flex: 1;
+        background: #0d1018;
+        color: #dae6ff;
+        border: 1px solid rgba(30, 80, 200, 0.45);
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-family: 'Barlow', sans-serif;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 140ms;
+      }
+      .add-input::placeholder { color: #7a6f6b; }
+      .add-input:focus { border-color: var(--hot-2); }
+
+      .next-up {
+        margin-top: 12px;
+        font-size: 0.9rem;
+        color: #c5d7ff;
+        padding: 10px 14px;
+        background: rgba(37, 90, 220, 0.08);
+        border-radius: 8px;
+        border-left: 3px solid var(--hot-2);
+      }
+
+      /* ── Shared button ────────────────────────────── */
+      .btn {
+        border: 1px solid rgba(65, 155, 255, 0.4);
+        border-radius: 10px;
+        background: rgba(16, 22, 34, 0.9);
+        color: #d1e2ff;
+        font-family: 'Barlow', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        min-height: 46px;
+        cursor: pointer;
+        transition: transform 130ms ease, filter 130ms ease;
+      }
+      .btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
+
+      .btn.primary {
+        background: linear-gradient(120deg, var(--hot-1), var(--hot-2));
+        color: #fff;
+        border: 0;
+        font-size: 1.05rem;
+      }
+
+      .btn.danger { border-color: rgba(65, 155, 255, 0.4); }
+
+      /* ── Mobile ───────────────────────────────────── */
+      @media (max-width: 720px) {
+        .workspace { grid-template-columns: 1fr; }
+        .timer-digits { font-size: clamp(5rem, 22vw, 7rem); }
+        .control-row { grid-template-columns: 1fr 1fr; }
       }
     </style>
   </head>
   <body>
-    <section class="panel" aria-label="Workout tracker">
-      <h1>Workout Tracker</h1>
-      <p>Select an exercise, track reps, and run your set timer.</p>
 
-      <div class="block">
-        <label for="exerciseSelect">Exercise List</label>
-        <select id="exerciseSelect" name="exerciseSelect">
-          <option>Push-Ups</option>
-          <option>Squats</option>
-          <option>Lunges</option>
-          <option>Deadlifts</option>
-          <option>Bench Press</option>
-          <option>Plank</option>
-          <option>Burpees</option>
-          <option>Jump Rope</option>
-        </select>
-        <div class="selected" id="selectedExercise">Selected: Push-Ups</div>
-      </div>
+    <div class="top-bar">
+      <h1 class="page-title">Flex<span>Fit</span> &mdash; Workout Tracker</h1>
+      <button class="back-btn" id="backBtn" type="button">&#8592; Back</button>
+    </div>
 
-      <div class="block">
-        <label>Rep Counter</label>
-        <div class="counter-row">
-          <button class="btn" id="minusRep" type="button" aria-label="Decrease reps">-1 Rep</button>
-          <div class="reps">
-            <strong id="repCount">0</strong>
-            <span>current reps</span>
+    <div class="workspace">
+
+      <!-- ── LEFT: Timer + Rep Counter ─────────────── -->
+      <div class="timer-col">
+
+        <div class="block timer-hero">
+          <span class="block-label">Set Timer</span>
+          <div class="timer-digits" id="timerDisplay">01:00</div>
+          <div class="timer-status" id="status">Ready to train.</div>
+        </div>
+
+        <div class="block" style="padding:20px 24px;">
+          <span class="block-label">Duration Preset</span>
+          <div class="preset-pills" id="presetPills">
+            <button class="preset-pill" data-secs="30">30s</button>
+            <button class="preset-pill" data-secs="45">45s</button>
+            <button class="preset-pill active" data-secs="60">1m</button>
+            <button class="preset-pill" data-secs="90">1m 30s</button>
+            <button class="preset-pill" data-secs="120">2m</button>
+            <button class="preset-pill" data-secs="180">3m</button>
+            <button class="preset-pill" data-secs="300">5m</button>
+            <button class="preset-pill" data-secs="600">10m</button>
           </div>
-          <button class="btn plus" id="plusRep" type="button" aria-label="Increase reps">+1 Rep</button>
+          <div class="adjust-row">
+            <button class="btn" id="minusFifteenBtn" type="button">&#8722; 15s</button>
+            <button class="btn" id="plusFifteenBtn" type="button">&#43; 15s</button>
+          </div>
+          <div class="control-row">
+            <button class="btn primary" id="startPauseBtn" type="button">Start</button>
+            <button class="btn" id="resetBtn" type="button">Reset</button>
+          </div>
         </div>
+
+        <div class="block rep-block">
+          <span class="block-label">Rep Counter</span>
+          <div class="rep-row">
+            <button class="btn" id="minusRep" type="button">&#8722;1 Rep</button>
+            <div>
+              <div class="rep-number" id="repCount">0</div>
+              <div class="rep-unit">reps</div>
+            </div>
+            <button class="btn primary" id="plusRep" type="button">&#43;1 Rep</button>
+          </div>
+        </div>
+
       </div>
 
-      <div class="block">
-        <label>Set Timer</label>
-        <div class="timer-display" id="timerDisplay">00:00</div>
-        <div class="timer-controls">
-          <button class="btn start" id="startPauseBtn" type="button">Start</button>
-          <button class="btn" id="resetBtn" type="button">Reset</button>
-          <button class="btn" id="addThirtyBtn" type="button">+30s</button>
+      <!-- ── RIGHT: Regimen Queue ───────────────────── -->
+      <div class="queue-col">
+
+        <div class="block">
+          <span class="block-label">Regimen Queue</span>
+
+          <div class="queue-header">
+            <div class="queue-name" id="activePresetName">General Session</div>
+            <div class="queue-meta" id="queueMeta">0 / 0 done</div>
+          </div>
+
+          <ul class="queue-list" id="regimenQueue"></ul>
+
+          <div class="add-row">
+            <input
+              class="add-input"
+              id="addInput"
+              type="text"
+              placeholder="Add exercise (e.g. Squat — 3×10)"
+              maxlength="80"
+            />
+            <button class="btn primary" id="addBtn" type="button" style="min-width:70px;">Add</button>
+          </div>
+
+          <div class="next-up" id="nextUp">Next up: —</div>
         </div>
-        <div class="status" id="status">Ready to train.</div>
+
+        <button class="btn danger" id="clearDoneBtn" type="button" style="width:100%;min-height:46px;">
+          Clear Completed Exercises
+        </button>
+
       </div>
-    </section>
+
+    </div><!-- /workspace -->
 
     <script>
-      const exerciseSelect = document.getElementById('exerciseSelect')
-      const selectedExercise = document.getElementById('selectedExercise')
-      const repCountEl = document.getElementById('repCount')
-      const plusRepBtn = document.getElementById('plusRep')
-      const minusRepBtn = document.getElementById('minusRep')
-      const timerDisplay = document.getElementById('timerDisplay')
-      const statusEl = document.getElementById('status')
-      const startPauseBtn = document.getElementById('startPauseBtn')
-      const resetBtn = document.getElementById('resetBtn')
-      const addThirtyBtn = document.getElementById('addThirtyBtn')
-
-      let reps = 0
-      let elapsedSeconds = 0
-      let timerId = null
-
-      function formatTime(totalSeconds) {
-        const mins = Math.floor(totalSeconds / 60)
-        const secs = totalSeconds % 60
-        return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+      const routines = {
+        Push: [
+          'Bench Press — 4 sets × 8 reps',
+          'Incline Dumbbell Press — 3 sets × 10 reps',
+          'Overhead Press — 3 sets × 8 reps',
+          'Tricep Dips — 3 sets × 12 reps',
+        ],
+        Pull: [
+          'Deadlift — 4 sets × 5 reps',
+          'Lat Pulldown — 3 sets × 10 reps',
+          'Barbell Row — 3 sets × 8 reps',
+          'Hammer Curl — 3 sets × 12 reps',
+        ],
+        Upper: [
+          'Flat Bench Press — 4 sets × 6 reps',
+          'Seated Cable Row — 3 sets × 10 reps',
+          'Dumbbell Shoulder Press — 3 sets × 10 reps',
+          'Cable Tricep Pushdown — 3 sets × 12 reps',
+        ],
+        Lower: [
+          'Back Squat — 4 sets × 6 reps',
+          'Romanian Deadlift — 3 sets × 8 reps',
+          'Walking Lunges — 3 sets × 12 reps each leg',
+          'Calf Raises — 4 sets × 15 reps',
+        ],
+        Legs: [
+          'Front Squat — 4 sets × 5 reps',
+          'Leg Press — 4 sets × 10 reps',
+          'Bulgarian Split Squat — 3 sets × 8 reps each leg',
+          'Hamstring Curl — 3 sets × 12 reps',
+        ],
+        Cardio: [
+          'Warm-up Walk — 5 min',
+          'Sprint Intervals — 30s on / 60s off × 10 rounds',
+          'Steady Pace Jog — 10 min',
+          'Cool-down Walk — 5 min',
+        ],
+        Flexibility: [
+          'Hip Openers — 2 rounds × 60 sec',
+          'Thoracic Rotations — 2 rounds × 45 sec',
+          'Hamstring Stretch — 2 rounds × 45 sec each side',
+          'Shoulder Mobility Flow — 2 rounds × 60 sec',
+        ],
+        'Cool Down': [
+          'Light Walk — 4 min',
+          'Box Breathing — 2 min',
+          'Full Body Stretch — 6 min',
+          'Hydration + Notes — 2 min',
+        ],
       }
 
-      function updateTimerUi() {
-        timerDisplay.textContent = formatTime(elapsedSeconds)
+      const defaultRoutine = [
+        'Warm-up — 5 min',
+        'Main Lift — 4 sets',
+        'Accessory Work — 3 sets',
+        'Cool-down Stretch — 5 min',
+      ]
+
+      /* ── Init ───────────────────────────────────── */
+      const params = new URLSearchParams(window.location.search)
+      const presetKey = params.get('preset')
+      const resolvedName = routines[presetKey] ? presetKey : 'General Session'
+      let queueItems = (routines[resolvedName] ?? defaultRoutine).map(text => ({ text, done: false }))
+
+      let baseSeconds = 60
+      let remainingSeconds = 60
+      let timerId = null
+      let reps = 0
+
+      /* ── DOM refs ───────────────────────────────── */
+      const timerDisplay   = document.getElementById('timerDisplay')
+      const statusEl       = document.getElementById('status')
+      const startPauseBtn  = document.getElementById('startPauseBtn')
+      const resetBtn       = document.getElementById('resetBtn')
+      const plusFifteenBtn = document.getElementById('plusFifteenBtn')
+      const minusFifteenBtn= document.getElementById('minusFifteenBtn')
+      const repCountEl     = document.getElementById('repCount')
+      const plusRepBtn     = document.getElementById('plusRep')
+      const minusRepBtn    = document.getElementById('minusRep')
+      const regimenQueueEl = document.getElementById('regimenQueue')
+      const queueMetaEl    = document.getElementById('queueMeta')
+      const nextUpEl       = document.getElementById('nextUp')
+      const activeNameEl   = document.getElementById('activePresetName')
+      const addInput       = document.getElementById('addInput')
+      const addBtn         = document.getElementById('addBtn')
+      const clearDoneBtn   = document.getElementById('clearDoneBtn')
+      const pills          = document.querySelectorAll('.preset-pill')
+
+      /* ── Helpers ────────────────────────────────── */
+      function fmt(s) {
+        return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`
+      }
+
+      function updateTimerUi() { timerDisplay.textContent = fmt(remainingSeconds) }
+
+      function setActivePill(secs) {
+        pills.forEach(p => p.classList.toggle('active', Number(p.dataset.secs) === secs))
+      }
+
+      /* ── Queue ──────────────────────────────────── */
+      function renderQueue() {
+        regimenQueueEl.innerHTML = ''
+        queueItems.forEach((item, i) => {
+          const li = document.createElement('li')
+          li.className = `queue-item${item.done ? ' done' : ''}`
+
+          const cb = document.createElement('input')
+          cb.type = 'checkbox'
+          cb.checked = item.done
+          cb.id = `qi-${i}`
+          cb.addEventListener('change', () => { queueItems[i].done = cb.checked; renderQueue() })
+
+          const lbl = document.createElement('label')
+          lbl.htmlFor = cb.id
+          lbl.style.cssText = 'margin:0;text-transform:none;letter-spacing:0;cursor:pointer;display:contents;'
+
+          const span = document.createElement('span')
+          span.className = 'item-text'
+          span.textContent = item.text
+
+          const del = document.createElement('button')
+          del.className = 'item-del'
+          del.title = 'Remove'
+          del.textContent = '×'
+          del.addEventListener('click', () => { queueItems.splice(i,1); renderQueue() })
+
+          lbl.appendChild(span)
+          li.appendChild(cb)
+          li.appendChild(lbl)
+          li.appendChild(del)
+          regimenQueueEl.appendChild(li)
+        })
+
+        const done = queueItems.filter(x => x.done).length
+        queueMetaEl.textContent = `${done} / ${queueItems.length} done`
+        const next = queueItems.find(x => !x.done)
+        nextUpEl.textContent = next ? `Next up: ${next.text}` : 'All done — great session!'
+      }
+
+      function completeCurrentTask() {
+        const idx = queueItems.findIndex(x => !x.done)
+        if (idx >= 0) { queueItems[idx].done = true; renderQueue() }
+      }
+
+      /* ── Timer ──────────────────────────────────── */
+      function saveElapsed(seconds) {
+        const total = Number(localStorage.getItem('workoutSecsTotal') ?? 0) + seconds
+        localStorage.setItem('workoutSecsTotal', String(total))
+
+        const todayKey = new Date().toISOString().slice(0, 10)
+        const day = JSON.parse(localStorage.getItem('workoutSecsDay') ?? '{}')
+        day[todayKey] = (day[todayKey] ?? 0) + seconds
+        localStorage.setItem('workoutSecsDay', JSON.stringify(day))
       }
 
       function startTimer() {
-        if (timerId) {
-          return
-        }
-
+        if (timerId) return
+        if (remainingSeconds <= 0) { remainingSeconds = baseSeconds; updateTimerUi() }
+        timerDisplay.classList.add('running')
+        timerDisplay.classList.remove('done')
         timerId = window.setInterval(() => {
-          elapsedSeconds += 1
+          remainingSeconds = Math.max(0, remainingSeconds - 1)
+          saveElapsed(1)
           updateTimerUi()
+          if (remainingSeconds === 0) {
+            pauseTimer()
+            timerDisplay.classList.add('done')
+            completeCurrentTask()
+            statusEl.textContent = 'Set complete — task checked off!'
+          }
         }, 1000)
-
         startPauseBtn.textContent = 'Pause'
-        statusEl.textContent = `Tracking ${exerciseSelect.value}. Keep pushing.`
+        const next = queueItems.find(x => !x.done)
+        statusEl.textContent = next ? `Running: ${next.text}` : 'Countdown running…'
       }
 
       function pauseTimer() {
-        if (!timerId) {
-          return
-        }
-
-        window.clearInterval(timerId)
+        if (!timerId) return
+        clearInterval(timerId)
         timerId = null
+        timerDisplay.classList.remove('running')
         startPauseBtn.textContent = 'Start'
-        statusEl.textContent = 'Timer paused. Breathe and resume when ready.'
+        statusEl.textContent = 'Paused.'
       }
 
-      exerciseSelect.addEventListener('change', () => {
-        selectedExercise.textContent = `Selected: ${exerciseSelect.value}`
-      })
-
-      plusRepBtn.addEventListener('click', () => {
-        reps += 1
-        repCountEl.textContent = reps
-      })
-
-      minusRepBtn.addEventListener('click', () => {
-        reps = Math.max(0, reps - 1)
-        repCountEl.textContent = reps
-      })
-
-      startPauseBtn.addEventListener('click', () => {
-        if (timerId) {
-          pauseTimer()
-        } else {
-          startTimer()
-        }
-      })
-
-      resetBtn.addEventListener('click', () => {
+      function resetTimer() {
         pauseTimer()
-        elapsedSeconds = 0
+        timerDisplay.classList.remove('done')
+        remainingSeconds = baseSeconds
         updateTimerUi()
-        statusEl.textContent = 'Timer reset. Ready for your next set.'
+        statusEl.textContent = `Ready — ${fmt(baseSeconds)}.`
+      }
+
+      /* ── Events ─────────────────────────────────── */
+      pills.forEach(p => {
+        p.addEventListener('click', () => {
+          pauseTimer()
+          timerDisplay.classList.remove('done')
+          baseSeconds = Number(p.dataset.secs)
+          remainingSeconds = baseSeconds
+          updateTimerUi()
+          setActivePill(baseSeconds)
+          statusEl.textContent = `Preset: ${fmt(baseSeconds)}.`
+        })
       })
 
-      addThirtyBtn.addEventListener('click', () => {
-        elapsedSeconds += 30
-        updateTimerUi()
+      startPauseBtn.addEventListener('click', () => { timerId ? pauseTimer() : startTimer() })
+      resetBtn.addEventListener('click', resetTimer)
+
+      plusFifteenBtn.addEventListener('click', () => {
+        remainingSeconds += 15; baseSeconds = remainingSeconds
+        updateTimerUi(); setActivePill(-1)
+        statusEl.textContent = `+15s → ${fmt(remainingSeconds)}`
       })
 
+      minusFifteenBtn.addEventListener('click', () => {
+        remainingSeconds = Math.max(15, remainingSeconds - 15); baseSeconds = remainingSeconds
+        updateTimerUi(); setActivePill(-1)
+        statusEl.textContent = `-15s → ${fmt(remainingSeconds)}`
+      })
+
+      plusRepBtn.addEventListener('click',  () => { reps++; repCountEl.textContent = reps })
+      minusRepBtn.addEventListener('click', () => { reps = Math.max(0,reps-1); repCountEl.textContent = reps })
+
+      function addExercise() {
+        const val = addInput.value.trim()
+        if (!val) return
+        queueItems.push({ text: val, done: false })
+        addInput.value = ''
+        renderQueue()
+        regimenQueueEl.lastElementChild?.scrollIntoView({ behavior: 'smooth' })
+      }
+
+      addBtn.addEventListener('click', addExercise)
+      addInput.addEventListener('keydown', e => { if (e.key === 'Enter') addExercise() })
+
+      clearDoneBtn.addEventListener('click', () => {
+        queueItems = queueItems.filter(x => !x.done)
+        renderQueue()
+      })
+
+      document.getElementById('backBtn').addEventListener('click', () => window.location.assign('/'))
+
+      /* ── Boot ───────────────────────────────────── */
+      activeNameEl.textContent = resolvedName
       updateTimerUi()
+      renderQueue()
     </script>
   </body>
 </html>

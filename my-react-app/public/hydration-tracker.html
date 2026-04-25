@@ -6,14 +6,14 @@
     <title>FlexFit Hydration Tracker</title>
     <style>
       :root {
-        --bg-0: #070707;
-        --bg-1: #18110d;
-        --card: rgba(255, 255, 255, 0.06);
-        --line: rgba(255, 127, 58, 0.35);
-        --text: #f4e8e0;
-        --muted: #c9b6ab;
-        --hot-1: #ff5722;
-        --hot-2: #ff9447;
+        --bg-0: #030303;
+        --bg-1: #080b12;
+        --card: rgba(255, 255, 255, 0.04);
+        --line: rgba(31, 80, 200, 0.4);
+        --text: #e0eaf4;
+        --muted: #abb8c9;
+        --hot-1: #0f2d6b;
+        --hot-2: #2563b6;
       }
 
       * {
@@ -28,9 +28,9 @@
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         color: var(--text);
         background:
-          radial-gradient(circle at 10% 5%, rgba(255, 92, 31, 0.2), transparent 40%),
-          radial-gradient(circle at 95% 0%, rgba(255, 141, 71, 0.18), transparent 35%),
-          linear-gradient(130deg, var(--bg-0), var(--bg-1));
+          radial-gradient(circle at 10% 5%, rgba(26, 90, 210, 0.12), transparent 40%),
+          radial-gradient(circle at 95% 0%, rgba(15, 45, 160, 0.12), transparent 35%),
+          linear-gradient(130deg, #030303, #080808);
         padding: 16px;
       }
 
@@ -43,12 +43,35 @@
         box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
       }
 
+      .top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .back-btn {
+        border: 1px solid rgba(65, 155, 255, 0.45);
+        border-radius: 10px;
+        background: #101622;
+        color: #d1e2ff;
+        font-size: 0.9rem;
+        font-weight: 700;
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+
+      .back-btn:hover {
+        filter: brightness(1.08);
+      }
+
       h1 {
         margin: 0 0 8px;
         font-size: clamp(1.9rem, 4vw, 2.4rem);
         line-height: 1;
         text-transform: uppercase;
-        color: #fff2e9;
+        color: #eef4ff;
       }
 
       p {
@@ -65,10 +88,10 @@
       }
 
       .btn {
-        border: 1px solid rgba(255, 125, 65, 0.45);
+        border: 1px solid rgba(65, 155, 255, 0.45);
         border-radius: 10px;
-        background: #221610;
-        color: #ffe2d1;
+        background: #101622;
+        color: #d1e2ff;
         font-size: 1.4rem;
         font-weight: 700;
         height: 46px;
@@ -83,7 +106,7 @@
 
       .btn.plus {
         background: linear-gradient(120deg, var(--hot-1), var(--hot-2));
-        color: #1a0f09;
+        color: #0e1622;
         border: 0;
       }
 
@@ -97,12 +120,12 @@
         margin-top: 14px;
         padding: 12px;
         border-radius: 12px;
-        border: 1px solid rgba(255, 130, 67, 0.3);
+        border: 1px solid rgba(30, 80, 200, 0.34);
         background: var(--card);
       }
 
       .goal strong {
-        color: #fff0e7;
+        color: #eaf2ff;
       }
 
       .meter-wrap {
@@ -111,7 +134,7 @@
 
       .meter-title {
         margin-bottom: 8px;
-        color: #f8ddd0;
+        color: #d8e6f8;
         font-size: 0.95rem;
         text-transform: uppercase;
         letter-spacing: 0.08em;
@@ -122,7 +145,7 @@
         height: 14px;
         border-radius: 999px;
         overflow: hidden;
-        border: 1px solid rgba(255, 130, 67, 0.35);
+        border: 1px solid rgba(30, 80, 200, 0.36);
         background: rgba(255, 255, 255, 0.06);
       }
 
@@ -144,13 +167,13 @@
       .cup {
         height: 30px;
         border-radius: 7px;
-        border: 1px solid rgba(255, 130, 67, 0.35);
+        border: 1px solid rgba(30, 80, 200, 0.38);
         background: rgba(255, 255, 255, 0.04);
         transition: transform 150ms ease, background 150ms ease;
       }
 
       .cup.active {
-        background: linear-gradient(160deg, rgba(255, 87, 34, 0.9), rgba(255, 148, 71, 0.8));
+        background: linear-gradient(160deg, rgba(15, 45, 107, 0.92), rgba(37, 99, 188, 0.85));
         transform: translateY(-2px);
       }
 
@@ -162,7 +185,10 @@
   </head>
   <body>
     <section class="panel" aria-label="Hydration tracker">
-      <h1>Hydration Tracker</h1>
+      <div class="top-row">
+        <h1>Hydration Tracker</h1>
+        <button class="back-btn" id="backBtn" type="button">Back</button>
+      </div>
       <p>Recommended water intake: <strong id="recommended">8 cups</strong></p>
 
       <div class="counter-row">
@@ -188,7 +214,10 @@
 
     <script>
       const recommendedCups = 8
-      let currentCups = 0
+      const initialStoredCups = Number(localStorage.getItem('hydrationCups') ?? 0)
+      let currentCups = Number.isFinite(initialStoredCups)
+        ? Math.min(recommendedCups, Math.max(0, initialStoredCups))
+        : 0
 
       const countEl = document.getElementById('count')
       const summaryEl = document.getElementById('summary')
@@ -204,6 +233,8 @@
       }
 
       function updateUi() {
+        localStorage.setItem('hydrationCups', String(currentCups))
+
         countEl.textContent = currentCups
         summaryEl.textContent = `${currentCups} cup${currentCups === 1 ? '' : 's'} logged`
 
@@ -233,6 +264,10 @@
       document.getElementById('minusBtn').addEventListener('click', () => {
         currentCups = Math.max(0, currentCups - 1)
         updateUi()
+      })
+
+      document.getElementById('backBtn').addEventListener('click', () => {
+        window.location.assign('/')
       })
 
       updateUi()

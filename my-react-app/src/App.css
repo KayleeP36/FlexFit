@@ -4,19 +4,11 @@
   place-items: center;
   position: relative;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 15% 20%, rgba(255, 74, 30, 0.14), transparent 45%),
-    radial-gradient(circle at 85% 10%, rgba(255, 140, 56, 0.12), transparent 42%),
-    linear-gradient(130deg, #070707 0%, #0f0f0f 45%, #1a1410 100%);
+  background: #0a0a0a;
 }
 
 .grain {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.14;
-  background-image: radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0);
-  background-size: 3px 3px;
+  display: none;
 }
 
 .hero {
@@ -24,18 +16,18 @@
   z-index: 1;
   width: min(1080px, 92vw);
   padding: 56px;
-  border: 1px solid rgba(255, 90, 38, 0.28);
+  border: 1px solid rgba(28, 100, 220, 0.32);
   border-radius: 24px;
-  background: linear-gradient(150deg, rgba(24, 24, 24, 0.96), rgba(16, 16, 16, 0.86));
+  background: linear-gradient(150deg, rgba(14, 14, 14, 0.97), rgba(8, 8, 8, 0.9));
   box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(255, 125, 62, 0.1) inset;
+    0 20px 60px rgba(0, 0, 0, 0.66),
+    0 0 0 1px rgba(28, 90, 200, 0.14) inset;
   animation: lift-in 650ms ease-out both;
 }
 
 .eyebrow {
   margin: 0;
-  color: #ff8245;
+  color: #4a7fd1;
   font-size: 0.95rem;
   letter-spacing: 0.35rem;
   text-transform: uppercase;
@@ -44,7 +36,7 @@
 
 .hero h1 {
   margin: 14px 0 12px;
-  color: #fff4ee;
+  color: #eef4ff;
   font-size: clamp(2.4rem, 7vw, 4.5rem);
   line-height: 0.95;
   text-transform: uppercase;
@@ -54,7 +46,7 @@
 .subtitle {
   max-width: 60ch;
   margin: 0 0 28px;
-  color: #d3cbc7;
+  color: #c7cbd3;
   font-size: clamp(1rem, 2vw, 1.2rem);
   line-height: 1.5;
   animation: reveal 550ms 320ms ease-out both;
@@ -80,20 +72,20 @@
 }
 
 .btn:focus-visible {
-  outline: 3px solid rgba(255, 121, 64, 0.45);
+  outline: 3px solid rgba(37, 90, 220, 0.5);
   outline-offset: 2px;
 }
 
 .btn-primary {
-  color: #150d09;
-  background: linear-gradient(120deg, #ff4d1f, #ff8f3c);
-  box-shadow: 0 8px 24px rgba(255, 79, 31, 0.35);
+  color: #dbe4f4;
+  background: linear-gradient(120deg, #0e2266, #1a54b0);
+  box-shadow: 0 8px 24px rgba(20, 75, 200, 0.32);
 }
 
 .btn-secondary {
-  color: #ffe0d0;
-  background: #231710;
-  border: 1px solid rgba(255, 120, 58, 0.45);
+  color: #d4d9ec;
+  background: #101114;
+  border: 1px solid rgba(28, 80, 200, 0.45);
 }
 
 .stats {
@@ -109,8 +101,8 @@
 
 .card {
   border-radius: 12px;
-  border: 1px solid rgba(255, 120, 58, 0.25);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(32, 85, 200, 0.24);
+  background: rgba(255, 255, 255, 0.015);
   padding: 14px;
 }
 
@@ -120,14 +112,14 @@
 
 .card span {
   display: block;
-  color: #bbaea8;
+  color: #a8afbb;
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .card strong {
-  color: #fff2ea;
+  color: #eaf2ff;
   font-size: 1.3rem;
 }
 
@@ -148,7 +140,7 @@
 }
 
 .feature-kicker {
-  color: #ff8a50;
+  color: #4f80cf;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 0.8rem;
@@ -156,28 +148,139 @@
 
 .feature-card h2 {
   margin: 0;
-  color: #fff1e9;
+  color: #e9f1ff;
   font-size: clamp(1.5rem, 2.5vw, 2.2rem);
   text-transform: uppercase;
 }
 
 .feature-card p {
   margin: 0;
-  color: #ccbfba;
+  color: #bac0cc;
   font-size: 1rem;
   line-height: 1.45;
 }
 
 .workout-card {
   background:
-    radial-gradient(circle at 15% 10%, rgba(255, 74, 30, 0.18), transparent 45%),
-    rgba(255, 255, 255, 0.02);
+    radial-gradient(circle at 15% 10%, rgba(30, 90, 200, 0.18), transparent 45%),
+    rgba(255, 255, 255, 0.015);
 }
 
 .hydration-card {
   background:
-    radial-gradient(circle at 85% 0%, rgba(255, 140, 56, 0.16), transparent 42%),
-    rgba(255, 255, 255, 0.02);
+    radial-gradient(circle at 85% 0%, rgba(20, 65, 195, 0.16), transparent 42%),
+    rgba(255, 255, 255, 0.015);
+}
+
+.preset-section {
+  margin-top: 26px;
+  animation: reveal 650ms 520ms ease-out both;
+}
+
+.preset-section h3 {
+  margin: 0;
+  color: #eaf2ff;
+  font-size: clamp(1.3rem, 2.4vw, 2rem);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.preset-subtitle {
+  margin: 6px 0 14px;
+  color: #ccbdb5;
+  font-size: 0.96rem;
+}
+
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 12px;
+}
+
+.preset-card {
+  position: relative;
+  min-height: 240px;
+  width: 100%;
+  border: 1px solid rgba(30, 80, 200, 0.28);
+  border-radius: 12px;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  background:
+    radial-gradient(circle at 90% -20%, rgba(30, 85, 200, 0.17), transparent 42%),
+    rgba(255, 255, 255, 0.015);
+  overflow: hidden;
+}
+
+.preset-card:focus-visible {
+  outline: 3px solid rgba(38, 95, 220, 0.55);
+  outline-offset: 2px;
+}
+
+.preset-front {
+  padding: 12px;
+}
+
+.preset-name {
+  display: inline-block;
+  color: #6688d6;
+  font-size: 0.86rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.preset-front p {
+  margin: 0;
+  color: #e1d5d0;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.preset-cta {
+  margin-top: 10px;
+  color: #8799d0;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+}
+
+.preset-hover {
+  position: absolute;
+  inset: 0;
+  padding: 12px;
+  background: linear-gradient(170deg, rgba(9, 9, 9, 0.98), rgba(10, 13, 26, 0.95));
+  overflow-y: auto;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 180ms ease, transform 180ms ease;
+  pointer-events: none;
+}
+
+.preset-hover strong {
+  color: #eaf2ff;
+  font-size: 0.95rem;
+}
+
+.preset-hover p {
+  margin: 4px 0;
+  color: #c5d8ff;
+  font-size: 0.84rem;
+}
+
+.preset-hover ul {
+  margin: 8px 0 0;
+  padding-inline-start: 16px;
+  color: #c5cbd8;
+  font-size: 0.81rem;
+  line-height: 1.35;
+}
+
+.preset-card:hover .preset-hover,
+.preset-card:focus-within .preset-hover {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 @keyframes lift-in {
@@ -215,7 +318,29 @@
     grid-template-columns: 1fr;
   }
 
+  .preset-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .btn {
     width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .preset-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .preset-card {
+    min-height: 220px;
+  }
+
+  .preset-hover {
+    opacity: 1;
+    transform: none;
+    position: static;
+    margin-top: 8px;
+    border-top: 1px solid rgba(32, 85, 200, 0.26);
   }
 }
