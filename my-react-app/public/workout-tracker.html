@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlexFit Workout Tracker</title>
+    <style>
+      :root {
+        --bg-0: #070707;
+        --bg-1: #18110d;
+        --card: rgba(255, 255, 255, 0.06);
+        --line: rgba(255, 127, 58, 0.35);
+        --text: #f4e8e0;
+        --muted: #c9b6ab;
+        --hot-1: #ff5722;
+        --hot-2: #ff9447;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 14px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 14% 4%, rgba(255, 92, 31, 0.22), transparent 40%),
+          radial-gradient(circle at 95% 2%, rgba(255, 141, 71, 0.18), transparent 35%),
+          linear-gradient(130deg, var(--bg-0), var(--bg-1));
+      }
+
+      .panel {
+        width: min(520px, 96vw);
+        border-radius: 22px;
+        padding: 22px;
+        border: 1px solid var(--line);
+        background: linear-gradient(160deg, rgba(20, 20, 20, 0.96), rgba(14, 14, 14, 0.92));
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.9rem, 4vw, 2.4rem);
+        text-transform: uppercase;
+        line-height: 1;
+      }
+
+      p {
+        margin: 8px 0 0;
+        color: var(--muted);
+      }
+
+      .block {
+        margin-top: 16px;
+        border: 1px solid rgba(255, 130, 67, 0.26);
+        background: var(--card);
+        border-radius: 14px;
+        padding: 14px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 0.88rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #f6ded1;
+      }
+
+      select {
+        width: 100%;
+        background: #18100d;
+        color: #ffe6da;
+        border: 1px solid rgba(255, 129, 63, 0.42);
+        border-radius: 10px;
+        padding: 11px;
+        font-size: 1rem;
+      }
+
+      .selected {
+        margin-top: 10px;
+        color: #ffd7c5;
+      }
+
+      .counter-row {
+        margin-top: 10px;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .btn {
+        border: 1px solid rgba(255, 125, 65, 0.45);
+        border-radius: 10px;
+        background: #221610;
+        color: #ffe2d1;
+        font-size: 1rem;
+        font-weight: 700;
+        min-height: 44px;
+        cursor: pointer;
+        transition: transform 140ms ease, filter 140ms ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.08);
+      }
+
+      .btn.plus,
+      .btn.start {
+        background: linear-gradient(120deg, var(--hot-1), var(--hot-2));
+        color: #1a0f09;
+        border: 0;
+      }
+
+      .reps {
+        text-align: center;
+      }
+
+      .reps strong {
+        display: block;
+        font-size: 2rem;
+        line-height: 1;
+      }
+
+      .reps span {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .timer-display {
+        text-align: center;
+        font-size: 2.2rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        margin-top: 4px;
+      }
+
+      .timer-controls {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .status {
+        margin-top: 12px;
+        color: #ffd7c5;
+        font-size: 0.95rem;
+      }
+
+      @media (max-width: 560px) {
+        .panel {
+          padding: 16px;
+        }
+
+        .timer-controls {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="panel" aria-label="Workout tracker">
+      <h1>Workout Tracker</h1>
+      <p>Select an exercise, track reps, and run your set timer.</p>
+
+      <div class="block">
+        <label for="exerciseSelect">Exercise List</label>
+        <select id="exerciseSelect" name="exerciseSelect">
+          <option>Push-Ups</option>
+          <option>Squats</option>
+          <option>Lunges</option>
+          <option>Deadlifts</option>
+          <option>Bench Press</option>
+          <option>Plank</option>
+          <option>Burpees</option>
+          <option>Jump Rope</option>
+        </select>
+        <div class="selected" id="selectedExercise">Selected: Push-Ups</div>
+      </div>
+
+      <div class="block">
+        <label>Rep Counter</label>
+        <div class="counter-row">
+          <button class="btn" id="minusRep" type="button" aria-label="Decrease reps">-1 Rep</button>
+          <div class="reps">
+            <strong id="repCount">0</strong>
+            <span>current reps</span>
+          </div>
+          <button class="btn plus" id="plusRep" type="button" aria-label="Increase reps">+1 Rep</button>
+        </div>
+      </div>
+
+      <div class="block">
+        <label>Set Timer</label>
+        <div class="timer-display" id="timerDisplay">00:00</div>
+        <div class="timer-controls">
+          <button class="btn start" id="startPauseBtn" type="button">Start</button>
+          <button class="btn" id="resetBtn" type="button">Reset</button>
+          <button class="btn" id="addThirtyBtn" type="button">+30s</button>
+        </div>
+        <div class="status" id="status">Ready to train.</div>
+      </div>
+    </section>
+
+    <script>
+      const exerciseSelect = document.getElementById('exerciseSelect')
+      const selectedExercise = document.getElementById('selectedExercise')
+      const repCountEl = document.getElementById('repCount')
+      const plusRepBtn = document.getElementById('plusRep')
+      const minusRepBtn = document.getElementById('minusRep')
+      const timerDisplay = document.getElementById('timerDisplay')
+      const statusEl = document.getElementById('status')
+      const startPauseBtn = document.getElementById('startPauseBtn')
+      const resetBtn = document.getElementById('resetBtn')
+      const addThirtyBtn = document.getElementById('addThirtyBtn')
+
+      let reps = 0
+      let elapsedSeconds = 0
+      let timerId = null
+
+      function formatTime(totalSeconds) {
+        const mins = Math.floor(totalSeconds / 60)
+        const secs = totalSeconds % 60
+        return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+      }
+
+      function updateTimerUi() {
+        timerDisplay.textContent = formatTime(elapsedSeconds)
+      }
+
+      function startTimer() {
+        if (timerId) {
+          return
+        }
+
+        timerId = window.setInterval(() => {
+          elapsedSeconds += 1
+          updateTimerUi()
+        }, 1000)
+
+        startPauseBtn.textContent = 'Pause'
+        statusEl.textContent = `Tracking ${exerciseSelect.value}. Keep pushing.`
+      }
+
+      function pauseTimer() {
+        if (!timerId) {
+          return
+        }
+
+        window.clearInterval(timerId)
+        timerId = null
+        startPauseBtn.textContent = 'Start'
+        statusEl.textContent = 'Timer paused. Breathe and resume when ready.'
+      }
+
+      exerciseSelect.addEventListener('change', () => {
+        selectedExercise.textContent = `Selected: ${exerciseSelect.value}`
+      })
+
+      plusRepBtn.addEventListener('click', () => {
+        reps += 1
+        repCountEl.textContent = reps
+      })
+
+      minusRepBtn.addEventListener('click', () => {
+        reps = Math.max(0, reps - 1)
+        repCountEl.textContent = reps
+      })
+
+      startPauseBtn.addEventListener('click', () => {
+        if (timerId) {
+          pauseTimer()
+        } else {
+          startTimer()
+        }
+      })
+
+      resetBtn.addEventListener('click', () => {
+        pauseTimer()
+        elapsedSeconds = 0
+        updateTimerUi()
+        statusEl.textContent = 'Timer reset. Ready for your next set.'
+      })
+
+      addThirtyBtn.addEventListener('click', () => {
+        elapsedSeconds += 30
+        updateTimerUi()
+      })
+
+      updateTimerUi()
+    </script>
+  </body>
+</html>

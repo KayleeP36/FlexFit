@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlexFit Hydration Tracker</title>
+    <style>
+      :root {
+        --bg-0: #070707;
+        --bg-1: #18110d;
+        --card: rgba(255, 255, 255, 0.06);
+        --line: rgba(255, 127, 58, 0.35);
+        --text: #f4e8e0;
+        --muted: #c9b6ab;
+        --hot-1: #ff5722;
+        --hot-2: #ff9447;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 10% 5%, rgba(255, 92, 31, 0.2), transparent 40%),
+          radial-gradient(circle at 95% 0%, rgba(255, 141, 71, 0.18), transparent 35%),
+          linear-gradient(130deg, var(--bg-0), var(--bg-1));
+        padding: 16px;
+      }
+
+      .panel {
+        width: min(460px, 96vw);
+        border-radius: 22px;
+        padding: 24px;
+        border: 1px solid var(--line);
+        background: linear-gradient(160deg, rgba(20, 20, 20, 0.96), rgba(14, 14, 14, 0.92));
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: clamp(1.9rem, 4vw, 2.4rem);
+        line-height: 1;
+        text-transform: uppercase;
+        color: #fff2e9;
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .counter-row {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .btn {
+        border: 1px solid rgba(255, 125, 65, 0.45);
+        border-radius: 10px;
+        background: #221610;
+        color: #ffe2d1;
+        font-size: 1.4rem;
+        font-weight: 700;
+        height: 46px;
+        cursor: pointer;
+        transition: transform 140ms ease, filter 140ms ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.08);
+      }
+
+      .btn.plus {
+        background: linear-gradient(120deg, var(--hot-1), var(--hot-2));
+        color: #1a0f09;
+        border: 0;
+      }
+
+      .count {
+        font-size: 2.1rem;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .goal {
+        margin-top: 14px;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 130, 67, 0.3);
+        background: var(--card);
+      }
+
+      .goal strong {
+        color: #fff0e7;
+      }
+
+      .meter-wrap {
+        margin-top: 18px;
+      }
+
+      .meter-title {
+        margin-bottom: 8px;
+        color: #f8ddd0;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .meter {
+        width: 100%;
+        height: 14px;
+        border-radius: 999px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 130, 67, 0.35);
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .meter-fill {
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--hot-1), var(--hot-2));
+        transition: width 180ms ease;
+      }
+
+      .cups {
+        margin-top: 14px;
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 8px;
+      }
+
+      .cup {
+        height: 30px;
+        border-radius: 7px;
+        border: 1px solid rgba(255, 130, 67, 0.35);
+        background: rgba(255, 255, 255, 0.04);
+        transition: transform 150ms ease, background 150ms ease;
+      }
+
+      .cup.active {
+        background: linear-gradient(160deg, rgba(255, 87, 34, 0.9), rgba(255, 148, 71, 0.8));
+        transform: translateY(-2px);
+      }
+
+      .hint {
+        margin-top: 12px;
+        font-size: 0.92rem;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="panel" aria-label="Hydration tracker">
+      <h1>Hydration Tracker</h1>
+      <p>Recommended water intake: <strong id="recommended">8 cups</strong></p>
+
+      <div class="counter-row">
+        <button class="btn" id="minusBtn" type="button" aria-label="Decrease cups">-1</button>
+        <div class="count"><span id="count">0</span> / 8</div>
+        <button class="btn plus" id="plusBtn" type="button" aria-label="Increase cups">+1</button>
+      </div>
+
+      <div class="goal">
+        <span>Today: <strong id="summary">0 cups logged</strong></span>
+      </div>
+
+      <div class="meter-wrap">
+        <div class="meter-title">Daily Progress</div>
+        <div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0">
+          <div class="meter-fill" id="meterFill"></div>
+        </div>
+        <div class="cups" id="cupsTrack" aria-hidden="true"></div>
+      </div>
+
+      <p class="hint" id="hint">Let's get hydrated. Start with your first cup.</p>
+    </section>
+
+    <script>
+      const recommendedCups = 8
+      let currentCups = 0
+
+      const countEl = document.getElementById('count')
+      const summaryEl = document.getElementById('summary')
+      const meterFillEl = document.getElementById('meterFill')
+      const hintEl = document.getElementById('hint')
+      const cupsTrackEl = document.getElementById('cupsTrack')
+      const meterEl = document.querySelector('[role="progressbar"]')
+
+      for (let i = 0; i < recommendedCups; i += 1) {
+        const cup = document.createElement('div')
+        cup.className = 'cup'
+        cupsTrackEl.appendChild(cup)
+      }
+
+      function updateUi() {
+        countEl.textContent = currentCups
+        summaryEl.textContent = `${currentCups} cup${currentCups === 1 ? '' : 's'} logged`
+
+        const progress = Math.min(100, (currentCups / recommendedCups) * 100)
+        meterFillEl.style.width = `${progress}%`
+        meterEl.setAttribute('aria-valuenow', String(currentCups))
+
+        const cupBlocks = cupsTrackEl.children
+        for (let i = 0; i < cupBlocks.length; i += 1) {
+          cupBlocks[i].classList.toggle('active', i < currentCups)
+        }
+
+        if (currentCups === 0) {
+          hintEl.textContent = "Let's get hydrated. Start with your first cup."
+        } else if (currentCups < recommendedCups) {
+          hintEl.textContent = `${recommendedCups - currentCups} more cup${recommendedCups - currentCups === 1 ? '' : 's'} to hit your goal.`
+        } else {
+          hintEl.textContent = 'Goal reached. Great recovery discipline!'
+        }
+      }
+
+      document.getElementById('plusBtn').addEventListener('click', () => {
+        currentCups = Math.min(recommendedCups, currentCups + 1)
+        updateUi()
+      })
+
+      document.getElementById('minusBtn').addEventListener('click', () => {
+        currentCups = Math.max(0, currentCups - 1)
+        updateUi()
+      })
+
+      updateUi()
+    </script>
+  </body>
+</html>

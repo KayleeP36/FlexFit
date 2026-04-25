@@ -1,6 +1,14 @@
 import './App.css'
 
 function App() {
+  const openWorkoutTracker = () => {
+    window.location.assign('/workout-tracker.html')
+  }
+
+  const openHydrationTracker = () => {
+    window.location.assign('/hydration-tracker.html')
+  }
+
   return (
     <main className="app">
       <div className="grain" aria-hidden="true"></div>
@@ -35,7 +43,11 @@ function App() {
               Log sets, reps, weights, and session intensity in one focused
               place.
             </p>
-            <button type="button" className="btn btn-primary">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={openWorkoutTracker}
+            >
               Open Workout Tracker
             </button>
           </article>
@@ -47,7 +59,11 @@ function App() {
               Track water intake daily and stay fueled so every workout hits
               harder.
             </p>
-            <button type="button" className="btn btn-secondary">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={openHydrationTracker}
+            >
               Open Hydration Tracker
             </button>
           </article>
