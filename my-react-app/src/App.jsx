@@ -20,10 +20,12 @@ function App() {
       duration: '45-55 min',
       rest: '60-90 sec',
       routine: [
+        'Warm-up - Band shoulder openers + light push-ups x 5 min',
         'Bench Press - 4 sets x 8 reps',
         'Incline Dumbbell Press - 3 sets x 10 reps',
         'Overhead Press - 3 sets x 8 reps',
         'Tricep Dips - 3 sets x 12 reps',
+        'Cool-down - Chest, front delt, and tricep stretch flow x 5 min',
       ],
     },
     {
@@ -32,10 +34,12 @@ function App() {
       duration: '45-60 min',
       rest: '60-90 sec',
       routine: [
+        'Warm-up - Scap pull-aparts + lat activation x 5 min',
         'Deadlift - 4 sets x 5 reps',
         'Lat Pulldown - 3 sets x 10 reps',
         'Barbell Row - 3 sets x 8 reps',
         'Hammer Curl - 3 sets x 12 reps',
+        'Cool-down - Lat, rear delt, and bicep stretch flow x 5 min',
       ],
     },
     {
@@ -44,10 +48,12 @@ function App() {
       duration: '50-65 min',
       rest: '75-90 sec',
       routine: [
+        'Warm-up - Arm circles + band rows + incline push-ups x 6 min',
         'Flat Bench Press - 4 sets x 6 reps',
         'Seated Cable Row - 3 sets x 10 reps',
         'Dumbbell Shoulder Press - 3 sets x 10 reps',
         'Cable Tricep Pushdown - 3 sets x 12 reps',
+        'Cool-down - Full upper-body stretch circuit x 6 min',
       ],
     },
     {
@@ -56,10 +62,12 @@ function App() {
       duration: '50-60 min',
       rest: '75-90 sec',
       routine: [
+        'Warm-up - Glute bridges + bodyweight squats + hip openers x 6 min',
         'Back Squat - 4 sets x 6 reps',
         'Romanian Deadlift - 3 sets x 8 reps',
         'Walking Lunges - 3 sets x 12 reps each leg',
         'Calf Raises - 4 sets x 15 reps',
+        'Cool-down - Quad, hamstring, calf, and hip flexor stretches x 6 min',
       ],
     },
     {
@@ -68,10 +76,12 @@ function App() {
       duration: '45-55 min',
       rest: '60-75 sec',
       routine: [
+        'Warm-up - Dynamic lunges + ankle mobility + squat holds x 6 min',
         'Front Squat - 4 sets x 5 reps',
         'Leg Press - 4 sets x 10 reps',
         'Bulgarian Split Squat - 3 sets x 8 reps each leg',
         'Hamstring Curl - 3 sets x 12 reps',
+        'Cool-down - Lower-body mobility and long-hold stretches x 6 min',
       ],
     },
     {
@@ -80,10 +90,10 @@ function App() {
       duration: '20-35 min',
       rest: 'Intervals',
       routine: [
-        'Warm-up Walk - 5 min',
+        'Warm-up - Brisk walk + dynamic leg swings x 5 min',
         'Sprint Intervals - 30 sec on / 60 sec off x 10 rounds',
         'Steady Pace Jog - 10 min',
-        'Cool-down Walk - 5 min',
+        'Cool-down - Slow walk + calf and hip stretches x 5 min',
       ],
     },
     {
@@ -92,10 +102,12 @@ function App() {
       duration: '15-25 min',
       rest: 'Slow breathing',
       routine: [
+        'Warm-up - Joint circles + gentle mobility prep x 4 min',
         'Hip Openers - 2 rounds x 60 sec',
         'Thoracic Rotations - 2 rounds x 45 sec',
         'Hamstring Stretch - 2 rounds x 45 sec each side',
         'Shoulder Mobility Flow - 2 rounds x 60 sec',
+        'Cool-down - Parasympathetic breathing + relaxed full-body stretch x 4 min',
       ],
     },
     {
@@ -104,62 +116,80 @@ function App() {
       duration: '20-30 min',
       rest: '30-45 sec',
       routine: [
+        'Warm-up - Dead bug activation + cat-cow + plank prep x 4 min',
         'Plank — 3 rounds × 60 sec',
         'Hanging Leg Raise — 3 sets × 12 reps',
         'Russian Twist — 3 sets × 20 reps',
         'Ab Wheel Rollout — 3 sets × 10 reps',
+        'Cool-down - Child pose + spinal twist + deep breathing x 4 min',
       ],
     },
   ]
 
   const homeRoutineByPreset = {
     Push: [
+      'Warm-up - Arm circles + incline wall push-ups x 4 min',
       'Push-ups - 4 sets x 15 reps',
       'Pike Push-ups - 3 sets x 10 reps',
       'Diamond Push-ups - 3 sets x 10 reps',
       'Chair Dips - 3 sets x 12 reps',
+      'Cool-down - Chest and tricep doorway stretches x 4 min',
     ],
     Pull: [
+      'Warm-up - Scap squeezes + band/towel rows x 4 min',
       'Doorway Rows (Towel) - 4 sets x 10 reps',
       'Prone Snow Angels - 3 sets x 15 reps',
       'Superman Hold - 3 rounds x 30 sec',
       'Reverse Plank - 3 rounds x 30 sec',
+      'Cool-down - Lat and rear shoulder stretches x 4 min',
     ],
     Upper: [
+      'Warm-up - Arm swings + shoulder circles + light push-ups x 5 min',
       'Push-ups - 4 sets x 12 reps',
       'Doorway Rows (Towel) - 4 sets x 10 reps',
       'Pike Push-ups - 3 sets x 8 reps',
       'Tricep Bench Dips (Chair) - 3 sets x 12 reps',
+      'Cool-down - Full upper-body stretch flow x 5 min',
     ],
     Lower: [
+      'Warm-up - Bodyweight squats + glute bridges + hip openers x 5 min',
       'Bodyweight Squats - 4 sets x 20 reps',
       'Reverse Lunges - 3 sets x 12 reps each leg',
       'Single-Leg Glute Bridge - 3 sets x 12 reps each leg',
       'Calf Raises - 4 sets x 20 reps',
+      'Cool-down - Quad, hamstring, and calf stretches x 5 min',
     ],
     Legs: [
+      'Warm-up - Dynamic lunges + ankle mobility + squat hold x 5 min',
       'Jump Squats - 4 sets x 12 reps',
       'Bulgarian Split Squat (Chair) - 3 sets x 10 reps each leg',
       'Wall Sit - 3 rounds x 45 sec',
       'Hamstring Walkouts - 3 sets x 10 reps',
+      'Cool-down - Lower-body recovery stretch flow x 5 min',
     ],
     Cardio: [
+      'Warm-up - March in place + dynamic leg swings x 4 min',
       'High Knees - 4 rounds x 45 sec',
       'Burpees - 4 sets x 10 reps',
       'Mountain Climbers - 4 rounds x 40 sec',
       'Jump Rope (Imaginary) - 5 min',
+      'Cool-down - Slow march + breathing reset + calf stretch x 4 min',
     ],
     Flexibility: [
+      'Warm-up - Gentle joint prep and controlled mobility x 3 min',
       'Hip Openers - 2 rounds x 60 sec',
       'Thoracic Rotations - 2 rounds x 45 sec',
       'Hamstring Stretch - 2 rounds x 45 sec each side',
       'Shoulder Mobility Flow - 2 rounds x 60 sec',
+      'Cool-down - Long-hold stretches with nasal breathing x 3 min',
     ],
     Core: [
+      'Warm-up - Cat-cow + dead bug activation + hollow hold prep x 4 min',
       'Plank - 3 rounds x 60 sec',
       'Hollow Hold - 3 rounds x 30 sec',
       'Russian Twist - 3 sets x 20 reps',
       'Dead Bug - 3 sets x 12 reps each side',
+      'Cool-down - Child pose + spinal rotations x 4 min',
     ],
   }
 
