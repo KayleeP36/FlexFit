@@ -332,6 +332,22 @@
   transform: translateY(8px);
   transition: opacity 180ms ease, transform 180ms ease;
   pointer-events: none;
+  scrollbar-color: #2b2b2b #121212;
+  scrollbar-width: thin;
+}
+
+.preset-hover::-webkit-scrollbar {
+  width: 10px;
+}
+
+.preset-hover::-webkit-scrollbar-track {
+  background: #121212;
+}
+
+.preset-hover::-webkit-scrollbar-thumb {
+  background: #2b2b2b;
+  border-radius: 999px;
+  border: 1px solid #1a1a1a;
 }
 
 .preset-hover strong {
@@ -357,6 +373,7 @@
 .preset-card:focus-within .preset-hover {
   opacity: 1;
   transform: translateY(0);
+  pointer-events: auto;
 }
 
 @keyframes lift-in {
@@ -378,6 +395,7 @@
   to {
     opacity: 1;
     transform: translateY(0);
+    pointer-events: auto;
   }
 }
 
@@ -468,6 +486,13 @@
   color: #6688d6;
 }
 
+.pr-date {
+  font-size: 0.76rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #8ea2d6;
+}
+
 .pr-edit-row {
   display: flex;
   align-items: center;
@@ -521,6 +546,11 @@
 }
 .pr-input::placeholder { color: #4a5570; }
 .pr-input:focus { border-color: #2563b6; }
+
+.pr-date-input {
+  flex: 0 0 170px;
+  min-width: 170px;
+}
 
 .pr-input-small {
   min-width: 0;

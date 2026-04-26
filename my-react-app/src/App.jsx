@@ -3,6 +3,8 @@ import HydrationTracker from './components/HydrationTracker'
 import './App.css'
 
 function App() {
+  const todayIso = () => new Date().toISOString().slice(0, 10)
+
   const [currentHash, setCurrentHash] = useState(() => window.location.hash)
 
   useEffect(() => {
@@ -272,6 +274,7 @@ function App() {
   })
   const [prExercise, setPrExercise] = useState('')
   const [prValue, setPrValue] = useState('')
+  const [prDate, setPrDate] = useState(() => todayIso())
   const [editingId, setEditingId] = useState(null)
   const [editValue, setEditValue] = useState('')
 
@@ -283,10 +286,12 @@ function App() {
   function addPr() {
     const ex = prExercise.trim()
     const val = prValue.trim()
+    const date = prDate || todayIso()
     if (!ex || !val) return
-    savePrs([...prs, { id: Date.now(), exercise: ex, value: val }])
+    savePrs([...prs, { id: Date.now(), exercise: ex, value: val, date }])
     setPrExercise('')
     setPrValue('')
+    setPrDate(todayIso())
   }
 
   function deletePr(id) {
@@ -342,7 +347,7 @@ function App() {
         </div>
 
         <p className="eyebrow">FLEXFIT</p>
-        <h1>Train Hard. Track Everything.</h1>
+        <h1>FlexFit - Track Workouts, Track Progress!</h1>
         <p className="subtitle">
           Build momentum with workout sessions that feel intense, focused, and
           impossible to skip.
@@ -445,6 +450,7 @@ function App() {
               {prs.map((pr) => (
                 <div className="pr-card" key={pr.id}>
                   <span className="pr-exercise">{pr.exercise}</span>
+                  <span className="pr-date">{pr.date || 'Date not set'}</span>
                   {editingId === pr.id ? (
                     <div className="pr-edit-row">
                       <input
@@ -484,6 +490,13 @@ function App() {
               onChange={e => setPrValue(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') addPr() }}
               maxLength={40}
+            />
+            <input
+              className="pr-input pr-date-input"
+              type="date"
+              value={prDate}
+              onChange={e => setPrDate(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') addPr() }}
             />
             <button className="btn btn-primary pr-add-btn" type="button" onClick={addPr}>
               Add PR
