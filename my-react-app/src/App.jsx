@@ -345,10 +345,6 @@ function App() {
       <section className="hero">
         <div className="stats top-stats" aria-label="Workout highlights">
           <div className="card stat-card">
-            <span>Total Mins Trained</span>
-            <strong>{totalMins} min</strong>
-          </div>
-          <div className="card stat-card">
             <span>Today's Mins Trained</span>
             <strong>{todayMins} min</strong>
           </div>
@@ -358,8 +354,7 @@ function App() {
           </div>
         </div>
 
-        <p className="eyebrow">FLEXFIT</p>
-        <h1>FlexFit - Track Workouts, Track Progress!</h1>
+        <h1>Flex<span className="hero-fit">Fit</span> - Track Workouts, Track Progress!</h1>
         <p className="subtitle">
           Build momentum with workout sessions that feel intense, focused, and
           impossible to skip.

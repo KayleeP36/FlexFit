@@ -60,6 +60,10 @@
   animation: reveal 550ms 220ms ease-out both;
 }
 
+.hero-fit {
+  color: #4a7fd1;
+}
+
 .subtitle {
   max-width: 60ch;
   margin: 0 0 28px;
