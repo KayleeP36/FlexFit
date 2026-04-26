@@ -65,6 +65,11 @@
   align-items: flex-start;
 }
 
+.tracker-controls .info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .tracker-controls .info h1 {
   margin: 0;
   color: var(--text-h);
@@ -99,335 +104,294 @@
 
 .tracker-root .stats strong {
   display: block;
-  font-size: 1.15rem;
   color: var(--text-h);
+  font-size: 1.3rem;
+  margin-bottom: 4px;
 }
 
-.muted {
-  color: var(--text);
-  opacity: 0.75;
-  font-size: 12px;
+.tracker-root .stats .muted {
+  font-size: 0.75rem;
+  color: #9ba5bb;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
-.controls {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: flex-start;
-  text-align: left;
-}
-
-.controls-compact {
-  min-width: 320px;
-  max-width: 360px;
-  width: 100%;
-  padding: 16px;
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.compact-control {
-  width: 100%;
-}
-
-.tracker-root label {
-  display: block;
-  font-size: 0.92rem;
-  color: var(--text);
-}
-
-.tracker-root input[type='number'],
-.tracker-root input[type='text'],
-.tracker-root select {
-  width: 100%;
-  margin-top: 6px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text-h);
-}
-
-.tracker-root input:focus-visible,
-.tracker-root select:focus-visible,
-.tracker-root button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.compare-toggle,
-.buttons button,
-.hydration-challenge-panel button {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(180deg, var(--accent-strong), #0b8fe6);
-  color: white;
-  font-weight: 700;
-  box-shadow: 0 6px 18px rgba(14, 165, 255, 0.12);
-  transition: transform 0.2s ease, box-shadow 0.3s ease, filter 0.2s ease;
-}
-
-.compare-toggle:hover,
-.buttons button:hover,
-.hydration-challenge-panel button:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.05);
-}
-
-.buttons .ghost {
-  background: transparent;
-  color: var(--text);
-}
-
 #center {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  padding: 16px 28px 28px;
+  padding: 0 32px 32px;
+  position: relative;
 }
 
+/* ── Hero/Pool ────────────────────────────────── */
 .hero {
   position: relative;
-  width: min(100%, 940px);
-}
-
-.hero .base,
-.hero .framework,
-.hero .vite {
-  inset-inline: 0;
+  width: 100%;
   margin: 0 auto;
 }
 
-.hero .base {
-  width: min(100%, 760px);
-  position: relative;
-  z-index: 2;
-}
-
-.hero .framework,
-.hero .vite {
+.framework, .vite {
   position: absolute;
-  border-radius: 50%;
+  inset: 0;
+  border-radius: 18px;
+  pointer-events: none;
 }
 
-.hero .framework {
-  z-index: 1;
-  top: 40px;
-  width: 220px;
-  height: 220px;
-  border: 1px solid rgba(118, 187, 255, 0.22);
-  background: radial-gradient(circle, rgba(109, 172, 255, 0.12), transparent 64%);
-  transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg) scale(1.35);
+.framework {
+  border: 2px solid rgba(75, 140, 255, 0.15);
 }
 
-.hero .vite {
-  z-index: 0;
-  top: 128px;
-  width: 300px;
-  height: 300px;
-  border: 1px solid rgba(103, 205, 255, 0.14);
-  background: radial-gradient(circle, rgba(80, 174, 255, 0.1), transparent 66%);
-  transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg) scale(0.85);
+.vite {
+  background: radial-gradient(circle at 30% 40%, rgba(75, 140, 255, 0.05), transparent 60%);
+}
+
+.base {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 760 / 480;
 }
 
 .ticks {
   position: relative;
   width: 100%;
-}
-
-.ticks::before,
-.ticks::after {
-  content: '';
-  position: absolute;
-  top: -4.5px;
-  border: 5px solid transparent;
-}
-
-.ticks::before {
-  left: 0;
-  border-left-color: var(--border);
-}
-
-.ticks::after {
-  right: 0;
-  border-right-color: var(--border);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .pool-wrap {
   position: relative;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  width: 100%;
+  height: 100%;
 }
 
 .pool {
   position: relative;
-  flex: 1 1 auto;
-  min-height: 560px;
-  border-radius: 30px;
-  border: 1px solid var(--border);
-  background:
-    radial-gradient(1200px 600px at 10% 10%, rgba(14, 165, 255, 0.07), transparent 10%),
-    linear-gradient(180deg, #071326 0%, #05131b 60%, #031019 100%);
+  width: clamp(380px, 80%, 680px);
+  aspect-ratio: 1.2;
+  border: 4px solid rgba(98, 170, 255, 0.6);
+  border-radius: 28px;
+  background: 
+    linear-gradient(to bottom, rgba(30, 100, 220, 0.08), rgba(15, 50, 150, 0.12)),
+    rgba(10, 15, 26, 0.88);
   overflow: hidden;
+  box-shadow: 
+    inset 0 2px 6px rgba(255, 255, 255, 0.1),
+    0 20px 60px rgba(0, 0, 0, 0.4);
 }
 
 .water {
   position: absolute;
+  bottom: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  background: linear-gradient(180deg, rgba(14, 165, 255, 0.9), rgba(3, 105, 161, 0.92));
-  transition: height 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  background: linear-gradient(to top, rgba(100, 200, 255, 0.4), rgba(50, 150, 255, 0.2));
+  transition: height 700ms ease;
 }
 
-.water::before {
-  content: '';
+.bottle-gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 120px;
+  min-width: 110px;
+  gap: 8px;
+}
+
+.bottle-head {
+  width: 34px;
+  height: 14px;
+  border: 2px solid rgba(140, 205, 255, 0.62);
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  background: rgba(10, 22, 40, 0.82);
+}
+
+.bottle-body {
+  position: relative;
+  width: 82px;
+  height: 215px;
+  border: 3px solid rgba(140, 205, 255, 0.62);
+  border-radius: 22px 22px 18px 18px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(150, 220, 255, 0.11), rgba(20, 38, 64, 0.7));
+  box-shadow: inset 0 1px 4px rgba(255, 255, 255, 0.17);
+}
+
+.bottle-water {
   position: absolute;
   left: 0;
   right: 0;
-  top: 0;
-  height: 24px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent);
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(126, 223, 255, 0.9), rgba(45, 158, 255, 0.78));
+  transition: height 600ms ease;
+}
+
+.bottle-meta {
+  text-align: center;
+}
+
+.bottle-meta strong {
+  display: block;
+  color: #dbf3ff;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.bottle-meta span {
+  display: block;
+  margin-top: 2px;
+  color: #95bde4;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .duck {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  transition: bottom 800ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 400ms ease;
-  width: 72px;
-  height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
+  width: 48px;
+  height: 36px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.duck.celebrate {
+  animation: duck-bounce 600ms cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
 
 .duck-body {
-  width: 48px;
-  height: 36px;
-  background: #ffd54a;
-  border-radius: 999px 999px 80px 80px;
-  box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.06);
+  position: absolute;
+  width: 32px;
+  height: 28px;
+  background: #ffc966;
+  border-radius: 60% 60% 50% 50%;
+  left: 8px;
+  top: 8px;
+  box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .duck-beak {
   position: absolute;
-  right: 22%;
-  top: 42%;
-  width: 18px;
+  width: 14px;
   height: 10px;
-  background: #ffb74d;
-  transform: rotate(20deg);
-  border-radius: 2px;
+  background: #ff9f43;
+  border-radius: 50%;
+  left: 36px;
+  top: 14px;
 }
 
 .duck-eye {
   position: absolute;
-  left: 36%;
-  top: 26%;
-  width: 6px;
-  height: 6px;
-  background: #222;
+  width: 4px;
+  height: 4px;
+  background: #000;
   border-radius: 50%;
+  left: 32px;
+  top: 12px;
 }
 
-.duck.celebrate {
-  animation: duck-bounce 1.2s ease-in-out infinite;
-  transform-origin: center bottom;
+@keyframes duck-bounce {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-60px); }
+  100% { transform: translateY(0); }
 }
 
-.buttons {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
+/* ── Confetti ─────────────────────────────────── */
+.confetti-root {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
 }
 
-.control-buttons {
-  justify-content: flex-start;
+.confetti {
+  position: absolute;
+  bottom: 50%;
+  pointer-events: none;
+  opacity: 0;
+  animation: confetti-flight var(--fall) ease-out forwards;
 }
 
+.confetti.rect   { clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%); }
+.confetti.circle { border-radius: 50%; }
+.confetti.diamond { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+
+.confetti.streamer {
+  width: 4px;
+  border-radius: 2px;
+  aspect-ratio: 1 / 3;
+}
+
+@keyframes confetti-flight {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(var(--tilt)deg) translateY(var(--burst)px);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--drift), 340px) rotate(calc(var(--tilt) + 360deg));
+  }
+}
+
+/* ── Next Steps / Olympian Benchmarks ─────────── */
 #next-steps {
-  display: block;
-  border-top: 1px solid var(--border);
-  text-align: left;
+  padding: 0 32px 32px;
 }
 
-#next-steps > div {
-  flex: 1 1 0;
-  padding: 32px;
+.challenge-column {
+  margin-top: 28px;
 }
 
-#next-steps h2 {
-  margin: 0 0 10px;
+.olympic-bottom h2 {
+  margin: 0 0 8px;
   color: var(--text-h);
-  font-size: 1.25rem;
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .panel-subtitle {
-  margin: 0 0 18px;
-  color: var(--text);
-  line-height: 1.5;
-}
-
-
-.olympic-bottom {
-  width: 100%;
-  min-width: 0;
+  margin: 0 0 16px;
+  color: #a8afbb;
+  font-size: 0.95rem;
+  line-height: 1.45;
 }
 
 .compare-grid {
   display: grid;
+  grid-template-columns: 1fr;
   gap: 16px;
   min-width: 0;
 }
 
-.compare-grid-left,
-.challenge-column {
+.compare-grid-left {
   min-width: 0;
-}
-
-.preview-card,
-.compare-panel,
-.hydration-challenge-panel {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-  padding: 18px 20px;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: linear-gradient(180deg, rgba(10, 14, 20, 0.45), rgba(6, 10, 14, 0.35));
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.16);
 }
 
 .compare-panel {
+  position: relative;
+  padding: 20px;
+  border: 1px solid var(--border);
   border-radius: 18px;
-  overflow: visible;
+  background: var(--surface);
+  overflow: hidden;
 }
 
-.preview-card strong,
-.compare-panel h2,
-.hydration-challenge-panel h3 {
-  color: var(--text-h);
+.compare-panel h2 {
+  display: none;
 }
 
-.preview-card p {
-  margin: 8px 0 0;
-  line-height: 1.5;
-}
-
-.compare-sub {
-  margin: 0 0 12px;
-  font-size: 13px;
-  color: var(--text);
-  opacity: 0.85;
+.compare-panel .compare-sub {
+  display: none;
 }
 
 .athlete-list {
@@ -472,209 +436,264 @@
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 6px;
+  padding-right: 8px;
 }
 
 .fill {
   height: 100%;
   background: linear-gradient(90deg, #22c1ff, #0ea5ff);
   transition: width 600ms ease;
-}
-
-.labels {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 12px;
-  font-size: 12px;
-  color: var(--text);
-  opacity: 0.8;
+  max-width: calc(100% - 8px);
 }
 
 .progress-label {
   font-size: 12px;
   color: var(--text);
-  opacity: 0.8;
+  margin-bottom: 4px;
 }
 
 .motivation {
-  margin-top: 8px;
-  font-size: 13px;
-  overflow-wrap: anywhere;
+  font-size: 12px;
+  color: #f0ac00;
+  font-weight: 500;
 }
 
 .motivation.done {
-  color: #67cbff;
-  font-weight: 600;
+  color: #34d399;
 }
 
-.hydration-panel-note {
-  margin: 8px 0 0;
-  font-size: 13px;
-  color: var(--text);
-  opacity: 0.82;
-  line-height: 1.5;
+/* ── Controls ─────────────────────────────────── */
+.controls {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
-.hydration-field-stack {
-  display: grid;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.hydration-friend-summary,
-.hydration-challenge-card,
-.hydration-challenge-vs {
-  display: grid;
+.controls label {
+  display: flex;
+  flex-direction: column;
   gap: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  padding: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.hydration-challenge-card,
-.hydration-challenge-vs {
+.controls input {
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-h);
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  transition: border-color 140ms;
+}
+
+.controls input:focus {
+  outline: none;
+  border-color: var(--accent-border);
+}
+
+.controls-compact {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex: 0 0 360px;
+  min-width: 320px;
+  max-width: 360px;
+  margin-left: auto;
+  padding: 16px;
+  border: 1px solid var(--border);
+  background: var(--surface-soft);
+  border-radius: 14px;
+}
+
+.controls-compact label {
+  width: 100%;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.controls-compact label.goal {
+  font-size: 1rem;
+  letter-spacing: 0.07em;
+}
+
+.controls-compact input {
+  width: min(190px, 100%);
+  padding: 6px 10px;
+  font-size: 0.9rem;
+}
+
+.controls-compact label.goal input {
+  width: min(220px, 100%);
+  padding: 8px 12px;
+  font-size: 1.08rem;
+}
+
+.add-amount-row {
+  display: block;
+  min-width: 0;
+}
+
+.add-amount-row input {
+  width: 100%;
+  max-width: 100%;
+  font-size: 1.02rem;
+}
+
+.buttons {
+  display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 8px;
 }
 
-.hydration-divider {
-  height: 1px;
-  background: var(--border);
-  margin: 12px 0;
+.control-buttons {
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.85fr) minmax(0, 0.85fr) minmax(0, 0.9fr);
+  gap: 8px;
+  margin-top: 12px;
 }
 
-.confetti-root {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: visible;
-  filter: drop-shadow(0 0 6px rgba(82, 185, 255, 0.3));
+.tracker-root button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-h);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: background 140ms, border-color 140ms, filter 140ms;
 }
 
-.confetti {
-  position: absolute;
-  top: -2%;
-  width: var(--size, 10px);
-  height: calc(var(--size, 10px) * 1.7);
-  opacity: 0;
-  border-radius: 2px;
-  transform-origin: center;
-  animation: confetti-flight var(--fall, 3.1s) cubic-bezier(0.18, 0.74, 0.28, 1) var(--delay, 0s) forwards;
+.tracker-root button:hover {
+  background: rgba(75, 140, 255, 0.15);
+  border-color: var(--accent-border);
+  filter: brightness(1.1);
 }
 
-.confetti.circle {
-  border-radius: 999px;
-  width: calc(var(--size, 10px) * 1.1);
-  height: calc(var(--size, 10px) * 1.1);
+.tracker-root button.ghost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.confetti.diamond {
-  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+.tracker-root button.ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--text);
 }
 
-.confetti.streamer {
-  width: calc(var(--size, 10px) * 0.58);
-  height: calc(var(--size, 10px) * 2.6);
-  border-radius: 999px;
+.control-buttons button:not(.ghost) {
+  background: linear-gradient(135deg, #87cfff, #60b8ff);
+  border-color: rgba(139, 206, 255, 0.95);
+  color: #07244a;
 }
 
-@keyframes duck-bounce {
-  0% { transform: translateX(-50%) translateY(0) rotate(0); }
-  30% { transform: translateX(-50%) translateY(-10px) rotate(-4deg); }
-  60% { transform: translateX(-50%) translateY(0) rotate(4deg); }
-  100% { transform: translateX(-50%) translateY(0) rotate(0); }
+.control-buttons button:not(.ghost):hover {
+  background: linear-gradient(135deg, #9ad8ff, #75c5ff);
+  border-color: #a8ddff;
+  filter: none;
 }
 
-@keyframes confetti-flight {
-  0% {
+.control-buttons .quick-fill {
+  padding-inline: 8px;
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.control-buttons .quick-fill:hover {
+  color: #ffffff;
+}
+
+/* ── Muted text ────────────────────────────────── */
+.muted {
+  font-size: 0.75rem;
+  color: #9ba5bb;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── Animations ────────────────────────────────── */
+@keyframes reveal {
+  from {
     opacity: 0;
-    transform: translate3d(0, 0, 0) rotate(var(--tilt, 0deg)) scale(0.7);
+    transform: translateY(10px);
   }
-  10% {
+  to {
     opacity: 1;
-    transform: translate3d(calc(var(--drift, 0px) * 0.18), var(--burst, -45px), 0)
-      rotate(calc(var(--tilt, 0deg) + 80deg)) scale(1);
-  }
-  35% {
-    opacity: 1;
-    transform: translate3d(calc(var(--drift, 0px) * 0.52), 220px, 0)
-      rotate(calc(var(--tilt, 0deg) + 240deg));
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(var(--drift, 0px), 760px, 0)
-      rotate(calc(var(--tilt, 0deg) + 720deg));
+    transform: translateY(0);
   }
 }
 
-@media (max-width: 1024px) {
-  #center {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
-
-  #next-steps {
-    text-align: center;
-  }
-
-  #next-steps > div {
-    padding: 24px 20px;
-  }
-}
-
-@media (max-width: 900px) {
+/* ── Responsive ────────────────────────────────── */
+@media (max-width: 980px) {
   .tracker-controls {
     flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
+    gap: 20px;
   }
 
-  .controls {
-    align-items: stretch;
+  .controls-compact {
+    flex: 1 1 auto;
+    margin-left: 0;
+    max-width: none;
   }
 
-  .athlete-meta {
-    min-width: 120px;
-  }
-}
-
-@media (max-width: 800px) {
-  .pool {
-    min-height: 430px;
-  }
-}
-
-@media (max-width: 980px) {
   .athlete-row {
     grid-template-columns: 1fr;
     gap: 10px;
   }
+
+  .pool-wrap {
+    gap: 12px;
+  }
+
+  .bottle-gauge {
+    width: 96px;
+    min-width: 92px;
+  }
+
+  .bottle-body {
+    width: 68px;
+    height: 176px;
+  }
 }
 
 @media (max-width: 640px) {
-  .tracker-root .stats {
+  .tracker-controls {
+    padding: 20px 16px 8px;
+  }
+
+  #center {
+    padding: 0 16px 20px;
+  }
+
+  #next-steps {
+    padding: 0 16px 20px;
+  }
+
+  .base {
+    aspect-ratio: auto;
+    min-height: 300px;
+  }
+
+  .pool-wrap {
     flex-direction: column;
+    align-items: center;
+    gap: 14px;
   }
 
-  .tracker-root .stats > div,
-  .compact-control,
-  .controls-compact {
-    width: 100%;
+  .bottle-gauge {
+    width: auto;
   }
 
-  .buttons {
-    flex-direction: column;
+  .control-buttons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .athlete-row,
-  .labels,
-  .hydration-challenge-card,
-  .hydration-challenge-vs {
-    grid-template-columns: 1fr;
-    display: grid;
-  }
-
-  .controls-compact {
-    min-width: 0;
-    max-width: none;
+  .compare-panel {
+    padding: 16px;
   }
 }

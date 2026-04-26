@@ -4,6 +4,7 @@ import AthleteCompare from './AthleteCompare'
 
 const STORAGE_KEY = 'hydration-tracker'
 const ML_PER_CUP = 240
+const BOTTLE_ML = 500
 
 function fmt(ml) {
   return `${ml.toLocaleString()} mL`
@@ -77,6 +78,8 @@ export default function HydrationTracker() {
   }, [percent])
 
   const duckSurfacePercent = Math.min(percent, 92)
+  const bottleFillPercent = Math.min(100, Math.round((consumed / BOTTLE_ML) * 100))
+  const bottleVisibleMl = Math.min(consumed, BOTTLE_ML)
 
   return (
     <section className="tracker-root" id="hydration-tracker" aria-label="Water tracker">
@@ -106,13 +109,15 @@ export default function HydrationTracker() {
         <div className="controls controls-compact" aria-label="Hydration controls">
           <label>
             Add amount (mL)
-            <input
-              type="number"
-              value={input}
-              min={0}
-              step={50}
-              onChange={(e) => setInput(Number(e.target.value))}
-            />
+            <div className="add-amount-row">
+              <input
+                type="number"
+                value={input}
+                min={0}
+                step={50}
+                onChange={(e) => setInput(Number(e.target.value))}
+              />
+            </div>
           </label>
 
           <label className="goal">
@@ -128,8 +133,8 @@ export default function HydrationTracker() {
 
           <div className="buttons control-buttons">
             <button onClick={() => add(input)}>Add Amount</button>
-            <button onClick={() => add(250)}>+250</button>
-            <button onClick={() => add(500)}>+500</button>
+            <button onClick={() => add(250)} className="quick-fill">+250</button>
+            <button onClick={() => add(500)} className="quick-fill">+500</button>
             <button onClick={reset} className="ghost">Reset</button>
           </div>
         </div>
@@ -174,6 +179,17 @@ export default function HydrationTracker() {
                     </div>
                   )}
                 </div>
+
+                <aside className="bottle-gauge" aria-label="500 mL bottle gauge">
+                  <div className="bottle-head" aria-hidden />
+                  <div className="bottle-body" aria-hidden>
+                    <div className="bottle-water" style={{ height: `${bottleFillPercent}%` }} />
+                  </div>
+                  <div className="bottle-meta">
+                    <strong>{bottleVisibleMl.toLocaleString()} / {BOTTLE_ML} mL</strong>
+                    <span>average bottle fill</span>
+                  </div>
+                </aside>
               </div>
             </div>
           </div>
