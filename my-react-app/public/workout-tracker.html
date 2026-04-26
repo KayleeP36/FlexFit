@@ -52,11 +52,13 @@
         object-fit: contain;
         z-index: 100;
         pointer-events: none;
-        background: #2a2a2a;
+        background:
+          linear-gradient(#545b66, #545b66) padding-box,
+          linear-gradient(145deg, #112748, #2a4f8a 55%, #0c1f3a) border-box;
         border-radius: 50%;
         padding: 10px;
-        border: 3px solid #4a7fd1;
-        box-shadow: 0 0 12px rgba(74, 127, 209, 0.5);
+        border: 3px solid transparent;
+        box-shadow: 0 0 18px rgba(125, 179, 255, 0.72);
         box-sizing: content-box;
       }
 
@@ -69,7 +71,16 @@
         color: #fff;
       }
 
-      .page-title span { color: var(--hot-2); }
+      .page-title .title-flex {
+        background: linear-gradient(145deg, #112748, #2a4f8a 55%, #0c1f3a);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .page-title .title-fit {
+        color: #eef4ff;
+      }
 
       .back-btn {
         border: 1px solid rgba(65, 155, 255, 0.45);
@@ -398,7 +409,7 @@
     <img src="/flexfit_logo.png" alt="FlexFit logo" class="site-logo" />
 
     <div class="top-bar">
-      <h1 class="page-title">Flex<span>Fit</span> &mdash; Workout Tracker</h1>
+      <h1 class="page-title"><span class="title-flex">Flex</span><span class="title-fit">Fit</span> &mdash; Workout Tracker</h1>
       <button class="back-btn" id="backBtn" type="button">&#8592; Back</button>
     </div>
 

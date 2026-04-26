@@ -356,7 +356,7 @@ function App() {
           </div>
         </div>
 
-        <h1>Flex<span className="hero-fit">Fit</span> - Track Workouts, Track Progress!</h1>
+        <h1><span className="hero-flex">Flex</span><span className="hero-fit">Fit</span> - Track Workouts, Track Progress!</h1>
         <p className="subtitle">
           Build momentum with workout sessions that feel intense, focused, and
           impossible to skip.
