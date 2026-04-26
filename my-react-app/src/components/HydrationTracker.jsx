@@ -78,8 +78,16 @@ export default function HydrationTracker() {
   }, [percent])
 
   const duckSurfacePercent = Math.min(percent, 92)
-  const bottleFillPercent = Math.min(100, Math.round((consumed / BOTTLE_ML) * 100))
-  const bottleVisibleMl = Math.min(consumed, BOTTLE_ML)
+  const bottleCount = Math.min(7, 1 + Math.floor(Math.max(consumed - 1, 0) / BOTTLE_ML))
+  const bottles = Array.from({ length: bottleCount }, (_, index) => {
+    const bottleVisibleMl = Math.max(0, Math.min(BOTTLE_ML, consumed - index * BOTTLE_ML))
+    const bottleFillPercent = Math.round((bottleVisibleMl / BOTTLE_ML) * 100)
+    return {
+      id: `bottle-${index}`,
+      bottleVisibleMl,
+      bottleFillPercent,
+    }
+  })
 
   return (
     <section className="tracker-root" id="hydration-tracker" aria-label="Water tracker">
@@ -179,22 +187,27 @@ export default function HydrationTracker() {
                     </div>
                   )}
                 </div>
-
-                <aside className="bottle-gauge" aria-label="500 mL bottle gauge">
-                  <div className="bottle-head" aria-hidden />
-                  <div className="bottle-body" aria-hidden>
-                    <div className="bottle-water" style={{ height: `${bottleFillPercent}%` }} />
-                  </div>
-                  <div className="bottle-meta">
-                    <strong>{bottleVisibleMl.toLocaleString()} / {BOTTLE_ML} mL</strong>
-                    <span>average bottle fill</span>
-                  </div>
-                </aside>
               </div>
             </div>
           </div>
         </div>
 
+        {bottles.length > 0 && (
+          <div className="bottle-stack" aria-label="500 mL bottle gauges">
+            {bottles.map((bottle) => (
+              <aside className="bottle-gauge" key={bottle.id}>
+                <div className="bottle-head" aria-hidden />
+                <div className="bottle-body" aria-hidden>
+                  <div className="bottle-water" style={{ height: `${bottle.bottleFillPercent}%` }} />
+                </div>
+                <div className="bottle-meta">
+                  <strong>{bottle.bottleVisibleMl.toLocaleString()} / {BOTTLE_ML} mL</strong>
+                  <span>average bottle fill</span>
+                </div>
+              </aside>
+            ))}
+          </div>
+        )}
       </div>
 
       <section id="next-steps">
