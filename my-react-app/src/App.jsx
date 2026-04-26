@@ -1,7 +1,18 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import HydrationTracker from './components/HydrationTracker'
 import './App.css'
 
 function App() {
+  const [currentHash, setCurrentHash] = useState(() => window.location.hash)
+
+  useEffect(() => {
+    const onHashChange = () => setCurrentHash(window.location.hash)
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
+  const isHydrationPage = currentHash === '#hydration-tracker'
+
   const workoutPresets = [
     {
       name: 'Push',
@@ -88,28 +99,93 @@ function App() {
       ],
     },
     {
-      name: 'Cool Down',
-      focus: 'Recovery and Heart Rate Reset',
-      duration: '10-15 min',
-      rest: 'Controlled',
+      name: 'Core',
+      focus: 'Abs, Obliques, Lower Back',
+      duration: '20-30 min',
+      rest: '30-45 sec',
       routine: [
-        'Light Walk - 4 min',
-        'Box Breathing - 2 min',
-        'Full Body Stretch - 6 min',
-        'Hydration + Notes - 2 min',
+        'Plank — 3 rounds × 60 sec',
+        'Hanging Leg Raise — 3 sets × 12 reps',
+        'Russian Twist — 3 sets × 20 reps',
+        'Ab Wheel Rollout — 3 sets × 10 reps',
       ],
     },
   ]
 
-  const recommendedCups = 8
-  const storedCups = Number(localStorage.getItem('hydrationCups') ?? 0)
-  const hydrationCups = Number.isFinite(storedCups)
-    ? Math.min(recommendedCups, Math.max(0, storedCups))
-    : 0
+  const homeRoutineByPreset = {
+    Push: [
+      'Push-ups - 4 sets x 15 reps',
+      'Pike Push-ups - 3 sets x 10 reps',
+      'Diamond Push-ups - 3 sets x 10 reps',
+      'Chair Dips - 3 sets x 12 reps',
+    ],
+    Pull: [
+      'Doorway Rows (Towel) - 4 sets x 10 reps',
+      'Prone Snow Angels - 3 sets x 15 reps',
+      'Superman Hold - 3 rounds x 30 sec',
+      'Reverse Plank - 3 rounds x 30 sec',
+    ],
+    Upper: [
+      'Push-ups - 4 sets x 12 reps',
+      'Doorway Rows (Towel) - 4 sets x 10 reps',
+      'Pike Push-ups - 3 sets x 8 reps',
+      'Tricep Bench Dips (Chair) - 3 sets x 12 reps',
+    ],
+    Lower: [
+      'Bodyweight Squats - 4 sets x 20 reps',
+      'Reverse Lunges - 3 sets x 12 reps each leg',
+      'Single-Leg Glute Bridge - 3 sets x 12 reps each leg',
+      'Calf Raises - 4 sets x 20 reps',
+    ],
+    Legs: [
+      'Jump Squats - 4 sets x 12 reps',
+      'Bulgarian Split Squat (Chair) - 3 sets x 10 reps each leg',
+      'Wall Sit - 3 rounds x 45 sec',
+      'Hamstring Walkouts - 3 sets x 10 reps',
+    ],
+    Cardio: [
+      'High Knees - 4 rounds x 45 sec',
+      'Burpees - 4 sets x 10 reps',
+      'Mountain Climbers - 4 rounds x 40 sec',
+      'Jump Rope (Imaginary) - 5 min',
+    ],
+    Flexibility: [
+      'Hip Openers - 2 rounds x 60 sec',
+      'Thoracic Rotations - 2 rounds x 45 sec',
+      'Hamstring Stretch - 2 rounds x 45 sec each side',
+      'Shoulder Mobility Flow - 2 rounds x 60 sec',
+    ],
+    Core: [
+      'Plank - 3 rounds x 60 sec',
+      'Hollow Hold - 3 rounds x 30 sec',
+      'Russian Twist - 3 sets x 20 reps',
+      'Dead Bug - 3 sets x 12 reps each side',
+    ],
+  }
 
   const hydrationPercent = useMemo(() => {
+    try {
+      const rawTracker = localStorage.getItem('hydration-tracker')
+
+      if (rawTracker) {
+        const parsed = JSON.parse(rawTracker)
+        const consumed = Number(parsed.consumed ?? 0)
+        const goal = Math.max(1, Number(parsed.goal ?? 2000))
+
+        return Math.min(100, Math.round((consumed / goal) * 100))
+      }
+    } catch {
+      // fall back to legacy cup counter below
+    }
+
+    const recommendedCups = 8
+    const storedCups = Number(localStorage.getItem('hydrationCups') ?? 0)
+    const hydrationCups = Number.isFinite(storedCups)
+      ? Math.min(recommendedCups, Math.max(0, storedCups))
+      : 0
+
     return Math.round((hydrationCups / recommendedCups) * 100)
-  }, [hydrationCups])
+  }, [currentHash])
 
   const totalMins = useMemo(() => {
     const secs = Number(localStorage.getItem('workoutSecsTotal') ?? 0)
@@ -122,17 +198,98 @@ function App() {
     return Math.floor((raw[todayKey] ?? 0) / 60)
   }, [todayKey])
 
+  const [isGymMode, setIsGymMode] = useState(true)
+
+  const visiblePresets = useMemo(() => {
+    if (isGymMode) {
+      return workoutPresets
+    }
+
+    return workoutPresets
+      .filter((preset) => homeRoutineByPreset[preset.name])
+      .map((preset) => ({
+        ...preset,
+        routine: homeRoutineByPreset[preset.name],
+      }))
+  }, [isGymMode])
+
   const openWorkoutTracker = () => {
-    window.location.assign('/workout-tracker.html')
+    const gymParam = isGymMode ? '1' : '0'
+    window.location.assign(`/workout-tracker.html?gym=${gymParam}`)
   }
 
   const openWorkoutPreset = (presetName) => {
     const encodedName = encodeURIComponent(presetName)
-    window.location.assign(`/workout-tracker.html?preset=${encodedName}`)
+    const gymParam = isGymMode ? '1' : '0'
+    window.location.assign(`/workout-tracker.html?preset=${encodedName}&gym=${gymParam}`)
   }
 
   const openHydrationTracker = () => {
-    window.location.assign('/hydration-tracker.html')
+    const baseUrl = `${window.location.pathname}${window.location.search}`
+    window.history.pushState(null, '', `${baseUrl}#hydration-tracker`)
+    setCurrentHash('#hydration-tracker')
+  }
+
+  const openMainWebsite = () => {
+    const baseUrl = `${window.location.pathname}${window.location.search}`
+    window.history.pushState(null, '', baseUrl)
+    setCurrentHash('')
+  }
+
+  // ── Personal Records ──────────────────────────────
+  const [prs, setPrs] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('flexfitPRs') ?? '[]') } catch { return [] }
+  })
+  const [prExercise, setPrExercise] = useState('')
+  const [prValue, setPrValue] = useState('')
+  const [editingId, setEditingId] = useState(null)
+  const [editValue, setEditValue] = useState('')
+
+  function savePrs(next) {
+    setPrs(next)
+    localStorage.setItem('flexfitPRs', JSON.stringify(next))
+  }
+
+  function addPr() {
+    const ex = prExercise.trim()
+    const val = prValue.trim()
+    if (!ex || !val) return
+    savePrs([...prs, { id: Date.now(), exercise: ex, value: val }])
+    setPrExercise('')
+    setPrValue('')
+  }
+
+  function deletePr(id) {
+    savePrs(prs.filter(p => p.id !== id))
+  }
+
+  function startEdit(pr) {
+    setEditingId(pr.id)
+    setEditValue(pr.value)
+  }
+
+  function confirmEdit(id) {
+    savePrs(prs.map(p => p.id === id ? { ...p, value: editValue.trim() || p.value } : p))
+    setEditingId(null)
+  }
+
+  if (isHydrationPage) {
+    return (
+      <main className="app hydration-page-shell">
+        <section className="hero hydration-page">
+          <div className="hydration-page-topbar">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={openMainWebsite}
+            >
+              Back To Main Website
+            </button>
+          </div>
+          <HydrationTracker />
+        </section>
+      </main>
+    )
   }
 
   return (
@@ -148,7 +305,7 @@ function App() {
             <span>Today's Mins Trained</span>
             <strong>{todayMins} min</strong>
           </div>
-          <div className="card stat-card">
+          <div className={`card stat-card ${hydrationPercent >= 100 ? 'stat-card-hydrated' : ''}`}>
             <span>Hydration Goal</span>
             <strong>{hydrationPercent}% Complete</strong>
           </div>
@@ -200,8 +357,29 @@ function App() {
           <p className="preset-subtitle">
             Hover over any preset to view the full regimen details.
           </p>
+          <div className="preset-toggle" role="group" aria-label="Workout location">
+            <button
+              type="button"
+              className={`preset-toggle-btn ${isGymMode ? 'active' : ''}`}
+              onClick={() => setIsGymMode(true)}
+            >
+              At The Gym
+            </button>
+            <button
+              type="button"
+              className={`preset-toggle-btn ${!isGymMode ? 'active' : ''}`}
+              onClick={() => setIsGymMode(false)}
+            >
+              No Equipment
+            </button>
+          </div>
+          {!isGymMode && (
+            <p className="preset-mode-note">
+              Showing bodyweight-friendly presets only.
+            </p>
+          )}
           <div className="preset-grid">
-            {workoutPresets.map((preset) => (
+            {visiblePresets.map((preset) => (
               <button
                 type="button"
                 className="preset-card"
@@ -225,6 +403,61 @@ function App() {
                 </div>
               </button>
             ))}
+          </div>
+        </section>
+
+        <section className="pr-section" aria-label="Personal Records">
+          <h3>Personal Records</h3>
+          <p className="preset-subtitle">Log your best lifts and milestones.</p>
+
+          {prs.length > 0 && (
+            <div className="pr-grid">
+              {prs.map((pr) => (
+                <div className="pr-card" key={pr.id}>
+                  <span className="pr-exercise">{pr.exercise}</span>
+                  {editingId === pr.id ? (
+                    <div className="pr-edit-row">
+                      <input
+                        className="pr-input pr-input-small"
+                        value={editValue}
+                        onChange={e => setEditValue(e.target.value)}
+                        onKeyDown={e => { if (e.key === 'Enter') confirmEdit(pr.id) }}
+                        autoFocus
+                      />
+                      <button className="pr-btn pr-save" type="button" onClick={() => confirmEdit(pr.id)}>✓</button>
+                    </div>
+                  ) : (
+                    <div className="pr-edit-row">
+                      <strong className="pr-value">{pr.value}</strong>
+                      <button className="pr-btn pr-edit" type="button" onClick={() => startEdit(pr)} title="Edit">✎</button>
+                      <button className="pr-btn pr-del" type="button" onClick={() => deletePr(pr.id)} title="Delete">×</button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="pr-add-row">
+            <input
+              className="pr-input"
+              placeholder="Exercise (e.g. Bench Press)"
+              value={prExercise}
+              onChange={e => setPrExercise(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') addPr() }}
+              maxLength={40}
+            />
+            <input
+              className="pr-input"
+              placeholder="PR (e.g. 225 lbs × 5)"
+              value={prValue}
+              onChange={e => setPrValue(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') addPr() }}
+              maxLength={40}
+            />
+            <button className="btn btn-primary pr-add-btn" type="button" onClick={addPr}>
+              Add PR
+            </button>
           </div>
         </section>
       </section>

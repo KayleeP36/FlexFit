@@ -423,7 +423,7 @@
     </div><!-- /workspace -->
 
     <script>
-      const routines = {
+      const gymRoutines = {
         Push: [
           'Bench Press — 4 sets × 8 reps',
           'Incline Dumbbell Press — 3 sets × 10 reps',
@@ -466,26 +466,87 @@
           'Hamstring Stretch — 2 rounds × 45 sec each side',
           'Shoulder Mobility Flow — 2 rounds × 60 sec',
         ],
-        'Cool Down': [
-          'Light Walk — 4 min',
-          'Box Breathing — 2 min',
-          'Full Body Stretch — 6 min',
-          'Hydration + Notes — 2 min',
+        Core: [
+          'Plank — 3 rounds × 60 sec',
+          'Hanging Leg Raise — 3 sets × 12 reps',
+          'Russian Twist — 3 sets × 20 reps',
+          'Ab Wheel Rollout — 3 sets × 10 reps',
         ],
       }
 
-      const defaultRoutine = [
+      const homeRoutines = {
+        Push: [
+          'Push-ups - 4 sets x 15 reps',
+          'Pike Push-ups - 3 sets x 10 reps',
+          'Diamond Push-ups - 3 sets x 10 reps',
+          'Chair Dips - 3 sets x 12 reps',
+        ],
+        Pull: [
+          'Doorway Rows (Towel) - 4 sets x 10 reps',
+          'Prone Snow Angels - 3 sets x 15 reps',
+          'Superman Hold - 3 rounds x 30 sec',
+          'Reverse Plank - 3 rounds x 30 sec',
+        ],
+        Upper: [
+          'Push-ups - 4 sets x 12 reps',
+          'Doorway Rows (Towel) - 4 sets x 10 reps',
+          'Pike Push-ups - 3 sets x 8 reps',
+          'Tricep Bench Dips (Chair) - 3 sets x 12 reps',
+        ],
+        Lower: [
+          'Bodyweight Squats - 4 sets x 20 reps',
+          'Reverse Lunges - 3 sets x 12 reps each leg',
+          'Single-Leg Glute Bridge - 3 sets x 12 reps each leg',
+          'Calf Raises - 4 sets x 20 reps',
+        ],
+        Legs: [
+          'Jump Squats - 4 sets x 12 reps',
+          'Bulgarian Split Squat (Chair) - 3 sets x 10 reps each leg',
+          'Wall Sit - 3 rounds x 45 sec',
+          'Hamstring Walkouts - 3 sets x 10 reps',
+        ],
+        Cardio: [
+          'High Knees - 4 rounds x 45 sec',
+          'Burpees - 4 sets x 10 reps',
+          'Mountain Climbers - 4 rounds x 40 sec',
+          'Jump Rope (Imaginary) - 5 min',
+        ],
+        Flexibility: [
+          'Hip Openers - 2 rounds x 60 sec',
+          'Thoracic Rotations - 2 rounds x 45 sec',
+          'Hamstring Stretch - 2 rounds x 45 sec each side',
+          'Shoulder Mobility Flow - 2 rounds x 60 sec',
+        ],
+        Core: [
+          'Plank - 3 rounds x 60 sec',
+          'Hollow Hold - 3 rounds x 30 sec',
+          'Russian Twist - 3 sets x 20 reps',
+          'Dead Bug - 3 sets x 12 reps each side',
+        ],
+      }
+
+      const gymDefaultRoutine = [
         'Warm-up — 5 min',
         'Main Lift — 4 sets',
         'Accessory Work — 3 sets',
         'Cool-down Stretch — 5 min',
       ]
 
+      const homeDefaultRoutine = [
+        'Warm-up March - 3 min',
+        'Bodyweight Circuit - 4 rounds',
+        'Core Finisher - 3 rounds',
+        'Stretch - 5 min',
+      ]
+
       /* ── Init ───────────────────────────────────── */
       const params = new URLSearchParams(window.location.search)
       const presetKey = params.get('preset')
-      const resolvedName = routines[presetKey] ? presetKey : 'General Session'
-      let queueItems = (routines[resolvedName] ?? defaultRoutine).map(text => ({ text, done: false }))
+      const isGymMode = params.get('gym') !== '0'
+      const activeRoutines = isGymMode ? gymRoutines : homeRoutines
+      const defaultRoutine = isGymMode ? gymDefaultRoutine : homeDefaultRoutine
+      const resolvedName = activeRoutines[presetKey] ? presetKey : 'General Session'
+      let queueItems = (activeRoutines[resolvedName] ?? defaultRoutine).map(text => ({ text, done: false }))
 
       let baseSeconds = 60
       let remainingSeconds = 60
@@ -667,7 +728,7 @@
       document.getElementById('backBtn').addEventListener('click', () => window.location.assign('/'))
 
       /* ── Boot ───────────────────────────────────── */
-      activeNameEl.textContent = resolvedName
+      activeNameEl.textContent = `${resolvedName} ${isGymMode ? '(Gym)' : '(No Equipment)'}`
       updateTimerUi()
       renderQueue()
     </script>
