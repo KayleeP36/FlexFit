@@ -223,13 +223,13 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
-        max-height: 340px;
+        max-height: 250px;
         overflow-y: auto;
       }
 
       .queue-list::-webkit-scrollbar { width: 4px; }
       .queue-list::-webkit-scrollbar-track { background: transparent; }
-      .queue-list::-webkit-scrollbar-thumb { background: rgba(182,37,46,0.4); border-radius: 4px; }
+      .queue-list::-webkit-scrollbar-thumb { background: rgba(151, 161, 176, 0.55); border-radius: 4px; }
 
       .queue-item {
         display: flex;
@@ -318,15 +318,19 @@
 
       .playlist-frame-wrap {
         overflow: hidden;
+        width: min(100%, 360px);
+        margin: 0 auto;
         border: 1px solid rgba(37, 99, 220, 0.28);
         border-radius: 14px;
         background: rgba(255, 255, 255, 0.03);
       }
 
+      .playlist-frame-wrap[hidden] { display: none; }
+
       .playlist-frame {
         display: block;
         width: 100%;
-        aspect-ratio: 16 / 9;
+        aspect-ratio: 9 / 16;
         border: 0;
       }
 
@@ -450,19 +454,18 @@
             <button class="btn primary" id="addBtn" type="button" style="min-width:70px;">Add</button>
           </div>
 
-          <div class="next-up" id="nextUp">Next up: —</div>
+          <button class="btn danger" id="clearDoneBtn" type="button" style="width:100%;min-height:46px;margin-top:12px;">
+            Clear Completed Exercises
+          </button>
         </div>
-
-        <button class="btn danger" id="clearDoneBtn" type="button" style="width:100%;min-height:46px;">
-          Clear Completed Exercises
-        </button>
 
         <div class="block playlist-block" id="playlistBlock" hidden>
           <span class="block-label">Playlist</span>
           <div class="playlist-card">
             <div class="queue-name" id="playlistTitle">Push Workout Videos</div>
-            <p class="playlist-copy" id="playlistDescription">Open the guided playlist for this workout.</p>
-            <div class="playlist-frame-wrap">
+            <p class="playlist-copy" id="playlistDescription">Choose to open the guided demo when you want it.</p>
+            <button class="btn" id="togglePlaylistBtn" type="button">Show Demo</button>
+            <div class="playlist-frame-wrap" id="playlistFrameWrap" hidden>
               <iframe
                 class="playlist-frame"
                 id="playlistFrame"
@@ -652,6 +655,7 @@
       let reps = 0
       let hasPlayedMiddleCue = false
       let hasPlayedFinalCue = false
+      let isPlaylistOpen = false
 
       /* ── DOM refs ───────────────────────────────── */
       const timerDisplay   = document.getElementById('timerDisplay')
@@ -665,7 +669,6 @@
       const minusRepBtn    = document.getElementById('minusRep')
       const regimenQueueEl = document.getElementById('regimenQueue')
       const queueMetaEl    = document.getElementById('queueMeta')
-      const nextUpEl       = document.getElementById('nextUp')
       const activeNameEl   = document.getElementById('activePresetName')
       const addInput       = document.getElementById('addInput')
       const addBtn         = document.getElementById('addBtn')
@@ -673,6 +676,8 @@
       const playlistBlock  = document.getElementById('playlistBlock')
       const playlistTitle  = document.getElementById('playlistTitle')
       const playlistDescription = document.getElementById('playlistDescription')
+      const togglePlaylistBtn = document.getElementById('togglePlaylistBtn')
+      const playlistFrameWrap = document.getElementById('playlistFrameWrap')
       const playlistFrame  = document.getElementById('playlistFrame')
       const playlistLink   = document.getElementById('playlistLink')
       const pills          = document.querySelectorAll('.preset-pill')
@@ -726,18 +731,27 @@
         pills.forEach(p => p.classList.toggle('active', Number(p.dataset.secs) === secs))
       }
 
+      function updatePlaylistButtonLabel() {
+        const action = isPlaylistOpen ? 'Hide' : 'Show'
+        togglePlaylistBtn.textContent = `${action} ${resolvedName} Demo`
+      }
+
       function renderPlaylist() {
         if (!activePlaylist) {
           playlistBlock.hidden = true
+          playlistFrameWrap.hidden = true
           playlistFrame.removeAttribute('src')
           playlistLink.href = '#'
           return
         }
 
+        isPlaylistOpen = false
         playlistTitle.textContent = activePlaylist.title
         playlistDescription.textContent = activePlaylist.description
-        playlistFrame.src = activePlaylist.embedUrl
+        playlistFrameWrap.hidden = true
+        playlistFrame.removeAttribute('src')
         playlistLink.href = activePlaylist.linkUrl
+        updatePlaylistButtonLabel()
         playlistBlock.hidden = false
       }
 
@@ -777,8 +791,6 @@
 
         const done = queueItems.filter(x => x.done).length
         queueMetaEl.textContent = `${done} / ${queueItems.length} done`
-        const next = queueItems.find(x => !x.done)
-        nextUpEl.textContent = next ? `Next up: ${next.text}` : 'All done — great session!'
       }
 
       function completeCurrentTask() {
@@ -896,6 +908,21 @@
 
       addBtn.addEventListener('click', addExercise)
       addInput.addEventListener('keydown', e => { if (e.key === 'Enter') addExercise() })
+
+      togglePlaylistBtn.addEventListener('click', () => {
+        if (!activePlaylist) return
+
+        isPlaylistOpen = !isPlaylistOpen
+        playlistFrameWrap.hidden = !isPlaylistOpen
+
+        if (isPlaylistOpen) {
+          playlistFrame.src = activePlaylist.embedUrl
+        } else {
+          playlistFrame.removeAttribute('src')
+        }
+
+        updatePlaylistButtonLabel()
+      })
 
       clearDoneBtn.addEventListener('click', () => {
         queueItems = queueItems.filter(x => !x.done)
