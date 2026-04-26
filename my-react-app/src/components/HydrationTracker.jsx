@@ -78,6 +78,10 @@ export default function HydrationTracker() {
   }, [percent])
 
   const duckSurfacePercent = Math.min(percent, 92)
+  const isFirstDuckPhase = percent < 50
+  const duckImageSrc = percent >= 100 ? '/final_duck.png' : percent >= 50 ? '/middle_duck.png' : '/first_duck.png'
+  const jiggleScale = Math.max(0, Math.min(percent / 100, 1))
+  const firstDuckOffsetPx = 90
   const bottleCount = Math.min(7, 1 + Math.floor(Math.max(consumed - 1, 0) / BOTTLE_ML))
   const bottles = Array.from({ length: bottleCount }, (_, index) => {
     const bottleVisibleMl = Math.max(0, Math.min(BOTTLE_ML, consumed - index * BOTTLE_ML))
@@ -157,15 +161,19 @@ export default function HydrationTracker() {
               <div className="pool-wrap">
                 <div className="pool">
                   <div className="water" style={{ height: `${percent}%` }} aria-hidden />
-                  <div
-                    className={`duck ${percent === 100 ? 'celebrate' : ''}`}
-                    style={{ bottom: `calc(${duckSurfacePercent}% + 8px)` }}
-                  >
-                    <div className="duck-body" />
-                    <div className="duck-beak" />
-                    <div className="duck-eye" />
-                  </div>
-
+                  {isFirstDuckPhase && (
+                    <div
+                      className="duck"
+                      style={{ bottom: `calc(${duckSurfacePercent}% + 8px - ${firstDuckOffsetPx}px)` }}
+                    >
+                      <img
+                        src={duckImageSrc}
+                        alt="duck"
+                        className="duck-img"
+                        style={{ '--jiggle-scale': jiggleScale }}
+                      />
+                    </div>
+                  )}
                   {confetti.length > 0 && (
                     <div className="confetti-root" aria-hidden>
                       {confetti.map((piece) => (
@@ -187,7 +195,20 @@ export default function HydrationTracker() {
                     </div>
                   )}
                 </div>
-              </div>
+                {!isFirstDuckPhase && (
+                    <div
+                      className={`duck ${percent >= 100 ? 'celebrate' : ''}`}
+                      style={{ bottom: `calc(${duckSurfacePercent}% + 8px - 90px)` }}
+                    >
+                      <img
+                        src={duckImageSrc}
+                        alt="duck"
+                        className="duck-img"
+                        style={{ '--jiggle-scale': jiggleScale }}
+                      />
+                    </div>
+                )}
+                  </div>
             </div>
           </div>
         </div>
