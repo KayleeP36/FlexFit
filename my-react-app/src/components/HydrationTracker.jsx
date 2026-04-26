@@ -46,7 +46,7 @@ export default function HydrationTracker() {
 
   const add = (amountInMl) => {
     const safeAmount = Math.max(0, Math.round(amountInMl || 0))
-    setConsumed((current) => Math.min(current + safeAmount, goal))
+    setConsumed((current) => current + safeAmount)
   }
 
   const reset = () => setConsumed(0)
