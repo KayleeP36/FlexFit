@@ -323,6 +323,7 @@ function App() {
   if (isHydrationPage) {
     return (
       <main className="app hydration-page-shell">
+        <img src="/flexfit_logo.png" alt="FlexFit logo" className="site-logo" />
         <section className="hero hydration-page">
           <div className="hydration-page-topbar">
             <button
@@ -342,6 +343,7 @@ function App() {
   return (
     <main className="app">
       <div className="grain" aria-hidden="true"></div>
+      <img src="/flexfit_logo.png" alt="FlexFit logo" className="site-logo" />
       <section className="hero">
         <div className="stats top-stats" aria-label="Workout highlights">
           <div className="card stat-card">
