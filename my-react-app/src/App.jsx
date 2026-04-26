@@ -277,6 +277,7 @@ function App() {
   const [prDate, setPrDate] = useState(() => todayIso())
   const [editingId, setEditingId] = useState(null)
   const [editValue, setEditValue] = useState('')
+  const [editDate, setEditDate] = useState(() => todayIso())
 
   function savePrs(next) {
     setPrs(next)
@@ -301,10 +302,21 @@ function App() {
   function startEdit(pr) {
     setEditingId(pr.id)
     setEditValue(pr.value)
+    setEditDate(pr.date || todayIso())
   }
 
   function confirmEdit(id) {
-    savePrs(prs.map(p => p.id === id ? { ...p, value: editValue.trim() || p.value } : p))
+    savePrs(
+      prs.map((p) =>
+        p.id === id
+          ? {
+              ...p,
+              value: editValue.trim() || p.value,
+              date: editDate || p.date || todayIso(),
+            }
+          : p
+      )
+    )
     setEditingId(null)
   }
 
@@ -450,11 +462,21 @@ function App() {
               {prs.map((pr) => (
                 <div className="pr-card" key={pr.id}>
                   <span className="pr-exercise">{pr.exercise}</span>
-                  <span className="pr-date">{pr.date || 'Date not set'}</span>
+                  {editingId === pr.id ? (
+                    <input
+                      className="pr-input pr-input-small pr-date-edit-inline"
+                      type="date"
+                      value={editDate}
+                      onChange={e => setEditDate(e.target.value)}
+                      onKeyDown={e => { if (e.key === 'Enter') confirmEdit(pr.id) }}
+                    />
+                  ) : (
+                    <span className="pr-date">{pr.date || 'Date not set'}</span>
+                  )}
                   {editingId === pr.id ? (
                     <div className="pr-edit-row">
                       <input
-                        className="pr-input pr-input-small"
+                        className="pr-input pr-input-small pr-value-edit-inline"
                         value={editValue}
                         onChange={e => setEditValue(e.target.value)}
                         onKeyDown={e => { if (e.key === 'Enter') confirmEdit(pr.id) }}
