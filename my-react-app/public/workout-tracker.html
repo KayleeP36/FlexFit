@@ -552,6 +552,8 @@
       let remainingSeconds = 60
       let timerId = null
       let reps = 0
+      let hasPlayedMiddleCue = false
+      let hasPlayedFinalCue = false
 
       /* ── DOM refs ───────────────────────────────── */
       const timerDisplay   = document.getElementById('timerDisplay')
@@ -571,6 +573,11 @@
       const addBtn         = document.getElementById('addBtn')
       const clearDoneBtn   = document.getElementById('clearDoneBtn')
       const pills          = document.querySelectorAll('.preset-pill')
+      const middleTimerAudio = new Audio('/middle_timer.mp3')
+      const finalTimerAudio = new Audio('/finishedtimer1.m4a')
+
+      middleTimerAudio.preload = 'auto'
+      finalTimerAudio.preload = 'auto'
 
       /* ── Helpers ────────────────────────────────── */
       function fmt(s) {
@@ -578,6 +585,18 @@
       }
 
       function updateTimerUi() { timerDisplay.textContent = fmt(remainingSeconds) }
+
+      function resetTimerAudioCues() {
+        hasPlayedMiddleCue = false
+        hasPlayedFinalCue = false
+      }
+
+      function playTimerCue(audio) {
+        audio.currentTime = 0
+        audio.play().catch(() => {
+          // Browser may block autoplay until user interacts; ignore safely.
+        })
+      }
 
       function setActivePill(secs) {
         pills.forEach(p => p.classList.toggle('active', Number(p.dataset.secs) === secs))
@@ -641,14 +660,28 @@
 
       function startTimer() {
         if (timerId) return
-        if (remainingSeconds <= 0) { remainingSeconds = baseSeconds; updateTimerUi() }
+        if (remainingSeconds <= 0) {
+          remainingSeconds = baseSeconds
+          updateTimerUi()
+          resetTimerAudioCues()
+        }
         timerDisplay.classList.add('running')
         timerDisplay.classList.remove('done')
         timerId = window.setInterval(() => {
           remainingSeconds = Math.max(0, remainingSeconds - 1)
           saveElapsed(1)
           updateTimerUi()
+
+          if (remainingSeconds === 7 && !hasPlayedMiddleCue) {
+            hasPlayedMiddleCue = true
+            playTimerCue(middleTimerAudio)
+          }
+
           if (remainingSeconds === 0) {
+            if (!hasPlayedFinalCue) {
+              hasPlayedFinalCue = true
+              playTimerCue(finalTimerAudio)
+            }
             pauseTimer()
             timerDisplay.classList.add('done')
             completeCurrentTask()
@@ -671,6 +704,7 @@
 
       function resetTimer() {
         pauseTimer()
+        resetTimerAudioCues()
         timerDisplay.classList.remove('done')
         remainingSeconds = baseSeconds
         updateTimerUi()
@@ -681,6 +715,7 @@
       pills.forEach(p => {
         p.addEventListener('click', () => {
           pauseTimer()
+          resetTimerAudioCues()
           timerDisplay.classList.remove('done')
           baseSeconds = Number(p.dataset.secs)
           remainingSeconds = baseSeconds
@@ -695,12 +730,14 @@
 
       plusFifteenBtn.addEventListener('click', () => {
         remainingSeconds += 15; baseSeconds = remainingSeconds
+        resetTimerAudioCues()
         updateTimerUi(); setActivePill(-1)
         statusEl.textContent = `+15s → ${fmt(remainingSeconds)}`
       })
 
       minusFifteenBtn.addEventListener('click', () => {
         remainingSeconds = Math.max(15, remainingSeconds - 15); baseSeconds = remainingSeconds
+        resetTimerAudioCues()
         updateTimerUi(); setActivePill(-1)
         statusEl.textContent = `-15s → ${fmt(remainingSeconds)}`
       })
